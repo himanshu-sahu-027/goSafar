@@ -4,10 +4,14 @@ import express from "express";
 import {
     registerUserController,
     loginUserController,
+    getUserProfileController,
+    logoutUserController
 } from "../controllers/user.controller.js";
 
 // import auth middlewares
-import {} from "../middlewares/auth.middleware.js";
+import {
+    authUser,
+} from "../middlewares/auth.middleware.js";
 
 // import request validators
 import {
@@ -34,5 +38,19 @@ userRouter.post( "/register", registerValidation, validateRequest, registerUserC
  */
 userRouter.post( "/login", loginValidation, validateRequest, loginUserController );
  
+/**
+ * @route GET /users/profile
+ * @description Get the profile of the authenticated user
+ * @access private
+ */
+userRouter.get( "/profile", authUser, getUserProfileController );
+
+/**
+ * @route POST /users/logout
+ * @description Logout a user by blacklisting its token and clearing the cookie
+ * @access private
+ */
+userRouter.post( "/logout", authUser, logoutUserController );
+
 
 export default userRouter;
