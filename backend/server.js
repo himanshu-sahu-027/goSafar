@@ -1,10 +1,10 @@
 import app from "./src/app.js";
-//import connectDB from "./src/config/db.js";
+import connectToDb from "./src/config/db.js";
 import { envConfig } from "./src/config/env.js";
 
-const startServer =  () => {
+const startServer = async () => {
   try {
-    //await connectDB();
+    await connectToDb();
 
     app.listen(envConfig.PORT, () => {
       console.log(`Server running on port ${envConfig.PORT}`);
