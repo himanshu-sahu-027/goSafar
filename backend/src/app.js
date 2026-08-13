@@ -22,7 +22,7 @@ import userRouter from "./routes/user.routes.js";
 
 // use routes
 
-app.use('/api/user', userRouter);
+app.use('/users', userRouter);
 
 app.get("/", (req,res) => {
     res.send("Hello world");
