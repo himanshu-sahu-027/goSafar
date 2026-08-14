@@ -29,6 +29,7 @@ async function registerUserController(req, res, next) {
       user: createdUser,
       token,
     });
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -54,10 +55,11 @@ async function loginUserController(req, res, next) {
     res.cookie("token", token);
 
     res.status(200).json({
-      message: "User loggeded successfully",
+      message: "User logged in successfully",
       user,
       token,
     });
+    
   } catch (error) {
     res.status(401).json({ message: error.message });
   }

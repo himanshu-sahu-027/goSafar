@@ -71,8 +71,8 @@ Retrieves the profile information of the currently authenticated user.
 
 ### Authentication
 
-Requires a valid JWT token in the Authorization header:
-`Authorization: Bearer <token>`
+Requires a valid JWT token in the Authorization header - 
+`Authorization: Bearer <token>` or cookie:
 
 ### Example Response
 
@@ -109,3 +109,128 @@ Requires a valid JWT token in the Authorization header or cookie:
 ### Example Response
 
 - `message` (String) : User logged out successfully.
+
+
+## `/captains/register` Endpoint
+
+### Description
+
+Registers a new captain by creating a captain account with the provided information.
+
+### HTTP Method
+
+`POST`
+
+### Request Body
+
+The request body should be in JSON format and include the following fields:
+
+- `fullname` (object):
+  - `firstname` (string, required): Captain's first name (minimum 3 characters)
+  - `lastname` (string, optional): Captain's last name
+- `email` (string, required): Captain's email address (must be a valid email)
+- `password` (string, required): Captain's password (minimum 6 characters)
+- `vehicle` (object):
+  - `color` (string, required): Vehicle color (minimum 3 characters)
+  - `plate` (string, required): Vehicle plate number (minimum 3 characters)
+  - `capacity` (number, required): Vehicle passenger capacity (minimum 1)
+  - `vehicleType` (string, required): Type of vehicle (must be 'car', 'motorcycle', or 'auto')
+
+### Example Response
+
+- `message` (String) : Captain registered successfully.
+- `captain` (object):
+  - `fullname` (object).
+    - `firstname` (string): Captain's first name (minimum 3 characters).
+    - `lastname` (string): Captain's last name (minimum 3 characters).   
+  - `email` (string): Captain's email address (must be a valid email).
+  - `password` (string): Captain's password (minimum 6 characters).
+  - `vehicle` (object):
+    - `color` (string): Vehicle color.
+    - `plate` (string): Vehicle plate number.
+    - `capacity` (number): Vehicle passenger capacity.
+    - `vehicleType` (string): Type of vehicle.
+- `token` (String): JWT Token
+
+## `/captains/login` Endpoint
+
+### Description
+
+Authenticates a captain using their email and password, returning a JWT token upon successful login.
+
+### HTTP Method
+
+`POST`
+
+### Endpoint
+
+`/captains/login`
+
+### Request Body
+
+The request body should be in JSON format and include the following fields:
+
+- `email` (string, required): Captain's email address (must be a valid email).
+- `password` (string, required): Captain's password (minimum 6 characters).
+
+### Example Response
+
+- `message` (String) : Captain logged in successfully.
+- `captain` (object):
+  - `fullname` (object).
+    - `firstname` (string): Captain's first name (minimum 3 characters).
+    - `lastname` (string): Captain's last name (minimum 3 characters).   
+  - `email` (string): Captain's email address (must be a valid email).
+  - `password` (string): Captain's password (minimum 6 characters).
+  - `vehicle` (object):
+    - `color` (string): Vehicle color.
+    - `plate` (string): Vehicle plate number.
+    - `capacity` (number): Vehicle passenger capacity.
+    - `vehicleType` (string): Type of vehicle.
+- `token` (String): JWT Token
+
+## `/captains/profile` Endpoint
+
+### Description
+
+Retrieves the profile information of the currently authenticated captain.
+
+### HTTP Method
+
+`GET`
+
+### Authentication
+
+Requires a valid JWT token in the Authorization header - 
+`Authorization: Bearer <token>`  or cookie:
+
+### Example Response
+
+- `captain` (object):
+  - `fullname` (object).
+    - `firstname` (string): Captain's first name (minimum 3 characters).
+    - `lastname` (string): Captain's last name (minimum 3 characters).   
+  - `email` (string): Captain's email address (must be a valid email).
+  - `vehicle` (object):
+    - `color` (string): Vehicle color.
+    - `plate` (string): Vehicle plate number.
+    - `capacity` (number): Vehicle passenger capacity.
+    - `vehicleType` (string): Type of vehicle.
+
+## `/captains/logout` Endpoint
+
+### Description
+
+Logout the current captain and blacklist the token provided in cookie or headers :
+
+### HTTP Method
+
+`GET`
+
+### Authentication
+
+Requires a valid JWT token in the Authorization header or cookie:
+
+### Example Response
+
+- `message` (string): Captain logged out successfully.

@@ -8,9 +8,13 @@ import userModel from "../models/user.model.js";
 async function createUserService(fullname, email, password) {
   
   // Check if user already exists
-  const existingUser = await userModel.findOne({ email });
-  if (existingUser) {
+  const isUserAlreadyExist = await userModel.findOne({ email });
+  if (isUserAlreadyExist) {
     throw new Error("User already exists");
+  }
+
+  if (!fullname?.firstname || !email || !password) {
+        throw new Error('All fields are required');
   }
 
   // Hash password

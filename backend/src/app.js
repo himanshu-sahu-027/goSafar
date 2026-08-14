@@ -19,10 +19,12 @@ app.use(cookieParser());
 
 // import routes
 import userRouter from "./routes/user.routes.js";
+import captainRouter from "./routes/captain.routes.js";
 
 // use routes
 
 app.use('/users', userRouter);
+app.use('/captains', captainRouter);
 
 app.get("/", (req,res) => {
     res.send("Hello world");
