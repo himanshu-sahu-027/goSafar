@@ -1,0 +1,53 @@
+.btn {
+  position: relative;
+
+  width: 100%;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 6px;
+
+  font-size: 1.2rem;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background-color 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  // Black primary button
+  &--primary {
+    background-color: #000;
+    color: #fff;
+
+    &:hover {
+      background-color: #1a1a1a;
+    }
+  }
+
+  // Arrow
+  &__arrow {
+    position: absolute;
+    right: 2rem;
+
+    font-size: 2rem;
+
+    transition: transform 0.2s ease;
+  }
+
+  // Arrow animation
+  &:hover &__arrow {
+    transform: translateX(3px);
+  }
+}
