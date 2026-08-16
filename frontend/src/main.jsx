@@ -7,11 +7,14 @@ import "./styles/style.scss";
 import App from "./App.jsx";
 
 import UserAuthProvider from "./features/auth/contexts/userAuth.context.jsx";
+import CaptainAuthProvider from "./features/auth/contexts/captainAuth.context.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <UserAuthProvider>
-      <App />
-    </UserAuthProvider>
+    <CaptainAuthProvider>
+      <UserAuthProvider>
+        <App />
+      </UserAuthProvider>
+    </CaptainAuthProvider>
   </BrowserRouter>,
 );

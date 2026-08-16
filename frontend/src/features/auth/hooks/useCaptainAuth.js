@@ -1,18 +1,18 @@
 import { useCallback, useContext, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
-import { UserAuthContext } from "../contexts/userAuth.context";
+import { CaptainAuthContext } from "../contexts/captainAuth.context";
 
 import {
-  registerUser,
-  loginUser,
-  getUserProfile,
-  logoutUser,
-} from "../services/userAuth.api";
+  registerCaptain,
+  loginCaptain,
+  getCaptainProfile,
+} from "../services/captainAuth.api";
 
-const useUserAuth = () => {
-  const { user, setUser, authChecked, setAuthChecked } =
-    useContext(UserAuthContext);
+const useCaptainAuth = () => {
+  const { captain, setCaptain, authChecked, setAuthChecked } =
+    useContext(CaptainAuthContext);
 
   const navigate = useNavigate();
 
@@ -20,27 +20,27 @@ const useUserAuth = () => {
   const [error, setError] = useState(null);
 
   const signup = useCallback(
-    async (userData) => {
+    async (captainData) => {
       setIsLoading(true);
       setError(null);
 
       try {
-        const data = await registerUser(userData);
+        const data = await registerCaptain(captainData);
 
-        localStorage.setItem("userToken", data.token);
+        localStorage.setItem("captainToken", data.token);
 
-        setUser(data.user);
+        setCaptain(data.captain);
         setAuthChecked(true);
 
-        navigate("/user-home");
+        navigate("/captain-home");
 
         return true;
       } catch (error) {
-        console.error("User signup failed:", error);
+        console.error("Captain signup failed:", error);
 
         const message =
           error.response?.data?.message ||
-          "Unable to create account. Please try again.";
+          "Unable to create captain account. Please try again.";
 
         setError(message);
 
@@ -49,7 +49,7 @@ const useUserAuth = () => {
         setIsLoading(false);
       }
     },
-    [navigate, setUser, setAuthChecked],
+    [navigate, setCaptain, setAuthChecked],
   );
 
   const login = useCallback(
@@ -58,18 +58,18 @@ const useUserAuth = () => {
       setError(null);
 
       try {
-        const data = await loginUser(credentials);
+        const data = await loginCaptain(credentials);
 
-        localStorage.setItem("userToken", data.token);
+        localStorage.setItem("captainToken", data.token);
 
-        setUser(data.user);
+        setCaptain(data.captain);
         setAuthChecked(true);
 
-        navigate("/user-home");
+        navigate("/captain-home");
 
         return true;
       } catch (error) {
-        console.error("User login failed:", error);
+        console.error("Captain login failed:", error);
 
         const message =
           error.response?.data?.message ||
@@ -82,14 +82,14 @@ const useUserAuth = () => {
         setIsLoading(false);
       }
     },
-    [navigate, setUser, setAuthChecked],
+    [navigate, setCaptain, setAuthChecked],
   );
 
-  const fetchUserProfile = useCallback(async () => {
-    const token = localStorage.getItem("userToken");
+  const fetchCaptainProfile = useCallback(async () => {
+    const token = localStorage.getItem("captainToken");
 
     if (!token) {
-      setUser(null);
+      setCaptain(null);
       setAuthChecked(true);
 
       return false;
@@ -99,20 +99,21 @@ const useUserAuth = () => {
     setError(null);
 
     try {
-      const data = await getUserProfile(token);
+      const data = await getCaptainProfile(token);
 
-      setUser(data.user ?? null);
+      setCaptain(data.captain ?? null);
 
       return true;
     } catch (error) {
-      console.error("Failed to fetch user profile:", error);
+      console.error("Failed to fetch captain profile:", error);
 
-      localStorage.removeItem("userToken");
-      setUser(null);
+      localStorage.removeItem("captainToken");
+
+      setCaptain(null);
 
       const message =
         error.response?.data?.message ||
-        "Your session has expired. Please login again.";
+        "Your captain session has expired. Please login again.";
 
       setError(message);
 
@@ -121,22 +122,22 @@ const useUserAuth = () => {
       setAuthChecked(true);
       setIsLoading(false);
     }
-  }, [setUser, setAuthChecked]);
+  }, [setCaptain, setAuthChecked]);
 
   const logout = useCallback(async () => {
-    const token = localStorage.getItem("userToken");
-
     setIsLoading(true);
     setError(null);
 
     try {
-      if (token) {
-        await logoutUser(token);
-      }
+      /*
+       * We will connect the backend logout
+       * endpoint here once we add it to
+       * captainAuth.api.js.
+       */
 
       return true;
     } catch (error) {
-      console.error("User logout failed:", error);
+      console.error("Captain logout failed:", error);
 
       const message =
         error.response?.data?.message || "Unable to logout properly.";
@@ -145,25 +146,27 @@ const useUserAuth = () => {
 
       return false;
     } finally {
-      localStorage.removeItem("userToken");
-      setUser(null);
+      localStorage.removeItem("captainToken");
+
+      setCaptain(null);
       setAuthChecked(true);
       setIsLoading(false);
 
-      navigate("/user-login");
+      navigate("/captain-login");
     }
-  }, [navigate, setUser, setAuthChecked]);
+  }, [navigate, setCaptain, setAuthChecked]);
 
   return {
-    user,
+    captain,
     authChecked,
     isLoading,
     error,
+
     signup,
     login,
-    fetchUserProfile,
+    fetchCaptainProfile,
     logout,
   };
 };
 
-export default useUserAuth;
+export default useCaptainAuth;

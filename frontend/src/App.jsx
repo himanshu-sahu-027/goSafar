@@ -10,7 +10,13 @@ import UserHome from "./features/user/pages/UserHome";
 import UserProtectWrapper from "./features/auth/components/UserProtectWrapper";
 import UserAuthInitializer from "./features/auth/components/UserAuthInitializer";
 
+import CaptainLogin from "./features/auth/pages/captainLogin";
+import CaptainSignup from "./features/auth/pages/captainSignup";
 import CaptainHome from "./features/captain/pages/CaptainHome";
+
+import CaptainProtectWrapper from "./features/auth/components/CaptainProtectWrapper";
+import CaptainAuthInitializer from "./features/auth/components/CaptainAuthInitializer";
+
 function App() {
   return (
     <Routes>
@@ -32,10 +38,23 @@ function App() {
         }
       />
 
-      <Route path="/captain-home" element={<CaptainHome />} />
-    </Routes>
+      {/* Public */}
+      <Route path="/captain-login" element={<CaptainLogin />} />
+      <Route path="/captain-signup" element={<CaptainSignup />} />
 
-    
+      {/* Protected */}
+
+      <Route
+        path="/captain-home"
+        element={
+          <CaptainAuthInitializer>
+            <CaptainProtectWrapper>
+              <CaptainHome />
+            </CaptainProtectWrapper>
+          </CaptainAuthInitializer>
+        }
+      />
+    </Routes>
   );
 }
 
