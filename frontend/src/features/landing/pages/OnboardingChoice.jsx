@@ -188,7 +188,7 @@ function OnboardingChoice() {
         <section className="px-6 pt-5 flex flex-col gap-3">
           {/* Rider */}
           <Link
-            to="/"
+            to="/user-home"
             className="
               group
               w-full
@@ -254,7 +254,7 @@ function OnboardingChoice() {
 
           {/* Captain */}
           <Link
-            to="/"
+            to="/captain-home"
             className="
               group
               w-full
