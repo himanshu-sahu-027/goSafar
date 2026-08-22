@@ -1,4 +1,9 @@
 import captainModel from "../models/captain.model.js";
+import {
+  getCachedCaptainProfile,
+  cacheCaptainProfile,
+  removeCaptainProfileCache,
+} from "./redis/redisProfileCache.service.js";
 
 /**
  * @name createCaptainService
@@ -52,4 +57,38 @@ async function loginCaptainService(email, password) {
   return captain;
 }
 
-export { createCaptainService, loginCaptainService };
+/**
+ * @name getCaptainProfileService
+ * @description Fetch captain profile by captainId
+ * @returns {Promise<Object>} - captain profile document
+ */
+async function getCaptainProfileService(captainId) {
+  if (!captainId) {
+    throw new Error("Captain id is required");
+  }
+
+  // Cache hit: Redis first.
+  const cachedCaptain = await getCachedCaptainProfile(captainId);
+  if (cachedCaptain) {
+    return cachedCaptain;
+  }
+
+  // Cache miss: MongoDB is the source of truth.
+  const captain = await captainModel.findById(captainId);
+
+  if (!captain) {
+    throw new Error("Captain not found");
+  }
+
+  await cacheCaptainProfile(captain);
+
+  return captain;
+}
+
+
+export {
+  createCaptainService,
+  loginCaptainService,
+  getCaptainProfileService,
+  removeCaptainProfileCache,
+};

@@ -134,7 +134,7 @@ The request body should be in JSON format and include the following fields:
   - `color` (string, required): Vehicle color (minimum 3 characters)
   - `plate` (string, required): Vehicle plate number (minimum 3 characters)
   - `capacity` (number, required): Vehicle passenger capacity (minimum 1)
-  - `vehicleType` (string, required): Type of vehicle (must be 'car', 'motorcycle', or 'auto')
+  - `vehicleType` (string, required): Type of vehicle (must be 'car', 'moto', or 'auto')
 
 ### Example Response
 

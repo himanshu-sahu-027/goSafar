@@ -6,9 +6,10 @@ export const envConfig={
     JWT_SECRET: process.env.JWT_SECRET,
     MONGO_URI: process.env.MONGO_URI,
     ORS_API_KEY: process.env.ORS_API_KEY,
+    REDIS_URL:process.env.REDIS_URL || "redis://localhost:6379",
 };
 
-const requiredEnvVar = ["JWT_SECRET", "MONGO_URI", "ORS_API_KEY"];
+const requiredEnvVar = ["JWT_SECRET", "MONGO_URI", "ORS_API_KEY", "REDIS_URL"];
 
 requiredEnvVar.forEach((key) => {
   if (!envConfig[key]) {

@@ -1,4 +1,9 @@
 import userModel from "../models/user.model.js";
+import {
+  getCachedUserProfile,
+  cacheUserProfile,
+  removeUserProfileCache,
+} from "./redis/redisProfileCache.service.js";
 
 /**
  * @name createUserService
@@ -53,7 +58,36 @@ async function loginUserService(email, password) {
   return user;
 }
 
-export { 
-    createUserService, 
-    loginUserService
+/**
+ * @name getUserProfileService
+ * @description Fetch user profile by userId
+ * @returns {Promise<Object>} - user profile document
+ */
+async function getUserProfileService(userId) {
+  if (!userId) {
+    throw new Error("User id is required");
+  }
+
+  // Cache hit: Redis first.
+  const cachedUser = await getCachedUserProfile(userId);
+  if (cachedUser) {
+    return cachedUser;
+  }
+
+  // Cache miss: MongoDB is the source of truth.
+  const user = await userModel.findById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  await cacheUserProfile(user);
+
+  return user;
+}
+
+export {
+    createUserService,
+    loginUserService,
+    getUserProfileService,
 };

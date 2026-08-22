@@ -2,9 +2,10 @@ import jwt from "jsonwebtoken";
 import { envConfig } from "../config/env.js";
 
 // import models
-import userModel from "../models/user.model.js";
-import captainModel from "../models/captain.model.js";
 import tokenBlacklistModel from "../models/tokenBlacklist.model.js";
+
+import { getUserProfileService } from "../services/user.service.js";
+import { getCaptainProfileService } from "../services/captain.service.js";
 
 async function authUser(req, res, next) {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
@@ -24,7 +25,7 @@ async function authUser(req, res, next) {
     const decoded = jwt.verify(token, envConfig.JWT_SECRET);
 
     // Find user by ID
-    const user = await userModel.findById(decoded._id);
+    const user = await getUserProfileService(decoded._id);
 
     req.user = user;
     return next();
@@ -53,7 +54,7 @@ async function authCaptain(req, res, next) {
     const decoded = jwt.verify(token, envConfig.JWT_SECRET);
 
     // Find captain by ID
-    const captain = await captainModel.findById(decoded._id);
+    const captain = await getCaptainProfileService(decoded._id);
 
     req.captain = captain;
     return next();
