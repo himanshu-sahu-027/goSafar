@@ -1,6 +1,6 @@
 import { connectToRedis, redisClient } from "../../config/redis.js";
 
-const PROFILE_CACHE_TTL = 2 * 60 * 60; // 2 hours
+const PROFILE_CACHE_TTL = 5 * 60; // 5 minutes
 
 
 /**
@@ -57,11 +57,11 @@ async function getCachedProfile(cacheKey) {
         const cachedProfile = await client.get(cacheKey);
 
         if (!cachedProfile) {
-            console.log(`Cache MISS: ${cacheKey}`);
+           // console.log(`Cache MISS: ${cacheKey}`);
             return null;
         }
 
-        console.log(`Cache HIT: ${cacheKey}`);
+       // console.log(`Cache HIT: ${cacheKey}`);
 
         try {
             return JSON.parse(cachedProfile);

@@ -5,7 +5,7 @@ import { envConfig } from "../config/env.js";
  * @name getAddressCoordinateService
  * @description Fetch latitude and longitude for a given address using ORS geocode API expects address as a query parameter
  * @param {string} address - The address to geocode
- * @returns {Promise<{latitude:number, longitude:number}>}
+ * @returns {Promise<{latitude:number, longitude:number}>} returns { latitude, longitude } of the address as an object
  */
 async function getAddressCoordinateService(address) {
   if (!address) {
@@ -40,7 +40,7 @@ async function getAddressCoordinateService(address) {
  * @description Calculate driving distance and time between origin and destination using ORS directions API expects origin and destination as "lng,lat" strings
  * @param {string} origin - "lng,lat" string for origin
  * @param {string} destination - "lng,lat" string for destination
- * @returns {Promise<{distance:string, duration:string}>}
+ * @returns {Promise<{distance:string, duration:string}>}  returns distance in km and duration in minutes as an object
  */
 async function getDistanceTimeService(origin, destination) {
   if (!origin || !destination) {
@@ -78,8 +78,8 @@ async function getDistanceTimeService(origin, destination) {
 
   // Convert meters → km, seconds → minutes
   return {
-    distance: `${(summary.distance / 1000).toFixed(1)} km`,
-    duration: `${Math.ceil(summary.duration / 60)} min`,
+    distance: Number((summary.distance / 1000).toFixed(1)), // in km
+    duration: Math.ceil(summary.duration / 60), // in minutes
   };
 }
 
@@ -87,7 +87,7 @@ async function getDistanceTimeService(origin, destination) {
  * @name getAutoCompleteSuggestionsService
  * @description Fetch autocomplete place suggestions using ORS geocode autocomplete API expects input as a query parameter
  * @param {string} input - Search text
- * @returns {Promise<Array<{name:string, coordinates:{longitude:number, latitude:number}}>>}
+ * @returns {Promise<Array<{name:string, coordinates:{longitude:number, latitude:number}}>>} returns an array of suggestions with name and coordinates
  */
 async function getAutoCompleteSuggestionsService(input) {
   if (!input) {
@@ -101,7 +101,8 @@ async function getAutoCompleteSuggestionsService(input) {
     params: {
       api_key: envConfig.ORS_API_KEY,
       text: input,
-      size: 5,
+      size: 7,
+      "boundary.country": "IN",
     },
   });
 

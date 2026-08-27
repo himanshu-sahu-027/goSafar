@@ -66,7 +66,11 @@ const captainSchema = new mongoose.Schema({
         longitude: {
             type: Number,
         }
-    }
+    },
+    locationUpdatedAt: {
+        type: Date,
+        default: Date.now
+    },
 })
 
 

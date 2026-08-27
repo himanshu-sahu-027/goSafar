@@ -21,11 +21,13 @@ app.use(cookieParser());
 import userRouter from "./routes/user.routes.js";
 import captainRouter from "./routes/captain.routes.js";
 import mapRouter from "./routes/map.routes.js";
+import rideRouter from "./routes/ride.routes.js";
 // use routes
 
 app.use('/users', userRouter);
 app.use('/captains', captainRouter);
 app.use('/maps', mapRouter);
+app.use('/rides', rideRouter);
 
 app.get("/", (req,res) => {
     res.send("Hello world");

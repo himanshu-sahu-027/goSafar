@@ -22,7 +22,7 @@ const mapRouter = express.Router();
  * @description Get latitude and longitude for a given address
  * @access Private 
  */
-mapRouter.get("/getCoordinates", getAddressCoordinatesValidator, validateRequest, authUser, getAddressCoordinatesController);
+mapRouter.get("/getCoordinates", getAddressCoordinatesValidator, validateRequest, getAddressCoordinatesController);   // temporarily removed the authUser
 
 /**
  * @route GET /map/getDistanceTime
