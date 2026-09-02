@@ -1,57 +1,66 @@
 import mongoose from 'mongoose';
 
 const rideSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-        required: true
-    },
-    captain: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'captain',
-    },
-    pickup: {
-        type: String,
-        required: true,
-    },
-    destination: {
-        type: String,
-        required: true,
-    },
-    fare: {
-        type: Number,
-        required: true,
-    },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user',
+            required: true
+        },
+        captain: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'captain',
+        },
+        pickup: {
+            type: String,
+            required: true,
+        },
+        destination: {
+            type: String,
+            required: true,
+        },
+        fare: {
+            type: Number,
+            required: true,
+        },
 
-    status: {
-        type: String,
-        enum: [ 'pending', 'accepted', "ongoing", 'completed', 'cancelled' ],
-        default: 'pending',
-    },
+        status: {
+            type: String,
+            enum: [ 'pending', 'accepted', 'ongoing', 'completed', 'cancelled' ],
+            default: 'pending',
+        },
 
-    duration: {
-        type: Number,
-    }, // in minutes
+        duration: {
+            type: Number,
+        }, // in minutes
 
-    distance: {
-        type: Number,
-    }, // in km
+        distance: {
+            type: Number,
+        }, // in km
 
-    paymentID: {
-        type: String,
+        otp: {
+            type: String,
+            select: false,
+            required: true,
+        },
     },
-    orderId: {
-        type: String,
-    },
-    signature: {
-        type: String,
-    },
+    {
+        timestamps: true,
 
-    otp: {
-        type: String,
-        select: false,
-        required: true,
-    },   
+        toJSON: {
+            virtuals: true,
+        },
+
+        toObject: {
+            virtuals: true,
+        },
+    }
+);
+
+rideSchema.virtual("payment", {
+    ref: "payment",
+    localField: "_id",
+    foreignField: "ride",
+    justOne: true,
 });
 
 export default mongoose.model('ride', rideSchema);

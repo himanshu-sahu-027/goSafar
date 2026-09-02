@@ -4,6 +4,7 @@ import {
     registerCaptainController,
     loginCaptainController,
     getCaptainProfileController,
+    getCaptainRideHistoryController,
     logoutCaptainController
 } from "../controllers/captain.controller.js";
 
@@ -40,6 +41,13 @@ captainRouter.post("/login", loginCaptainValidation, validateRequest, loginCapta
  * @access private
  */
 captainRouter.get("/profile", authCaptain, getCaptainProfileController);
+
+/**
+ * @route GET /captains/history
+ * @description Get authenticated captain ride history
+ * @access private
+ */
+captainRouter.get("/history", authCaptain, getCaptainRideHistoryController);
  
 /**
  * @route POST /captains/logout

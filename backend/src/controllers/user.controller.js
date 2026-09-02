@@ -2,6 +2,7 @@ import {
   createUserService,
   loginUserService,
 } from "../services/user.service.js";
+import { getUserRideHistoryService } from "../services/ride.service.js";
 
 import tokenBlacklistModel from "../models/tokenBlacklist.model.js";
 
@@ -75,6 +76,15 @@ async function getUserProfileController(req, res, next) {
   res.status(200).json(req.user);
 }
 
+async function getUserRideHistoryController(req, res) {
+  try {
+    const rides = await getUserRideHistoryService(req.user._id);
+    return res.status(200).json(rides);
+  } catch (error) {
+    console.error("Get user ride history error:", error);
+    return res.status(400).json({ message: error.message });
+  }
+}
 
 /**
  * @name logoutUserController
@@ -108,5 +118,6 @@ export {
   registerUserController,
   loginUserController,
   getUserProfileController,
+  getUserRideHistoryController,
   logoutUserController,
 };

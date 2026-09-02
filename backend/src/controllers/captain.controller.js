@@ -2,6 +2,7 @@ import {
   createCaptainService,
   loginCaptainService,
 } from "../services/captain.service.js";
+import { getCaptainRideHistoryService } from "../services/ride.service.js";
 import tokenBlacklistModel from "../models/tokenBlacklist.model.js";
 
 /**
@@ -74,6 +75,16 @@ async function getCaptainProfileController(req, res) {
   res.status(200).json(req.captain);
 }
 
+async function getCaptainRideHistoryController(req, res) {
+  try {
+    const rides = await getCaptainRideHistoryService(req.captain._id);
+    return res.status(200).json(rides);
+  } catch (error) {
+    console.error("Get captain ride history error:", error);
+    return res.status(400).json({ message: error.message });
+  }
+}
+
 /**
  * @name logoutCaptainController
  * @description Logout a captain by blacklisting its token and clearing the cookie
@@ -106,5 +117,6 @@ export {
     registerCaptainController,
     loginCaptainController, 
     getCaptainProfileController,
+    getCaptainRideHistoryController,
     logoutCaptainController
 };

@@ -5,6 +5,7 @@ import {
     registerUserController,
     loginUserController,
     getUserProfileController,
+    getUserRideHistoryController,
     logoutUserController
 } from "../controllers/user.controller.js";
 
@@ -44,6 +45,13 @@ userRouter.post( "/login", loginValidation, validateRequest, loginUserController
  * @access private
  */
 userRouter.get( "/profile", authUser, getUserProfileController );
+
+/**
+ * @route GET /users/history
+ * @description Get authenticated user's ride history
+ * @access private
+ */
+userRouter.get("/history", authUser, getUserRideHistoryController);
 
 /**
  * @route POST /users/logout

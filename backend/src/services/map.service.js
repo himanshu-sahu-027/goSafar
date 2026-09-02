@@ -12,7 +12,7 @@ async function getAddressCoordinateService(address) {
     throw new Error("Address is required");
   }
 
-  const url = "https://api.openrouteservice.org/geocode/search";
+  const url = "https://api.heigit.org/pelias/v1/search";
 
   // Call ORS geocode API
   const response = await axios.get(url, {
@@ -55,7 +55,7 @@ async function getDistanceTimeService(origin, destination) {
     throw new Error("Invalid coordinates");
   }
 
-  const url = "https://api.openrouteservice.org/v2/directions/driving-car";
+  const url = "https://api.heigit.org/openrouteservice/v2/directions/driving-car";
 
   // Call ORS directions API
   const response = await axios.get(url, {
@@ -94,7 +94,7 @@ async function getAutoCompleteSuggestionsService(input) {
     throw new Error("Search input is required");
   }
 
-  const url = "https://api.openrouteservice.org/geocode/autocomplete";
+  const url = "https://api.heigit.org/pelias/v1/autocomplete";
 
   // Call ORS autocomplete API
   const response = await axios.get(url, {

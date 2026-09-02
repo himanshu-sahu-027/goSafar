@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 
 import userModel from "./models/user.model.js";
 import captainModel from "./models/captain.model.js";
+import rideModel from "./models/ride.model.js";
 import { updateCaptainLocationService } from "./services/captain.service.js";
 
 import {
@@ -19,6 +20,15 @@ const captainSocketMap = new Map();
 
 // Stores: captainId -> last MongoDB sync time
 const captainLocationSyncMap = new Map();
+
+// Socket event contract for ride live-location updates:
+// - join
+// - updateLocationCaptain
+// - captainLocationUpdate
+// - createNewRide
+// - rideConfirmed
+// - rideStarted
+// - rideEnded
 
 // Initialize Socket.IO
 function initializeSocket(server) {
@@ -98,11 +108,19 @@ function initializeSocket(server) {
     });
 
     // Update captain's live location
-    socket.on("update-location-captain", async (data) => {
+    socket.on("updateLocationCaptain", async (data) => {
       try {
-        const { userId, location } = data;
+        const captainId = captainSocketMap.get(socket.id) || String(data?.userId || "");
 
-        if ( !userId || !location || location.latitude === undefined || location.longitude === undefined ) {
+        if (!captainId) {
+          return socket.emit("error", {
+            message: "Captain not registered for socket",
+          });
+        }
+
+        const { location } = data || {};
+
+        if (!location || location.latitude === undefined || location.longitude === undefined) {
           return socket.emit("error", {
             message: "Invalid location data",
           });
@@ -122,24 +140,38 @@ function initializeSocket(server) {
           Every location update goes to Redis because
           Redis is our high-speed live-location store.
         */
-        const redisUpdated = await updateCaptainGeoLocation(userId, latitude, longitude);
+        const redisUpdated = await updateCaptainGeoLocation(captainId, latitude, longitude);
 
         /* STEP 2: MongoDB periodic checkpoint */
-
-        const captainId = String(userId);
         const now = Date.now();
-
-        // Get the last time MongoDB was updated.
         const lastSyncTime = captainLocationSyncMap.get(captainId) || 0;
+        const shouldSyncToMongoDB = (now - lastSyncTime) >= MONGO_LOCATION_SYNC_INTERVAL;
 
-        // Check whether 30 seconds have passed.
-        const shouldSyncToMongoDB = ( now - lastSyncTime ) >= MONGO_LOCATION_SYNC_INTERVAL;
+        // Keep the latest captain location available to the passenger immediately.
+        // MongoDB remains a 30-second checkpoint, while Redis remains the fast geo store.
+        const activeRide = await rideModel
+          .findOne({
+            captain: captainId,
+            status: { $in: ["accepted", "ongoing"] },
+          })
+          .populate({
+            path: "user",
+            select: "socketId",
+          });
+
+        if (activeRide?.user?.socketId) {
+          sendMessageToUser(activeRide.user.socketId, {
+            event: "captainLocationUpdate",
+            data: {
+              rideId: String(activeRide._id),
+              location: { latitude, longitude },
+            },
+          });
+        }
 
         if (shouldSyncToMongoDB) {
           try {
-            await updateCaptainLocationService(userId, latitude, longitude);
-
-            // MongoDB successfully stored the latest location.
+            await updateCaptainLocationService(captainId, latitude, longitude);
             captainLocationSyncMap.set(captainId, now);
           } catch (mongoError) {
             console.error(
@@ -188,7 +220,7 @@ function initializeSocket(server) {
 }
 
 // Send event to a specific socket
-function sendMessageToSocketId(socketId, messageObject) {
+function sendMessageToUser(socketId, messageObject) {
     if (!io) {
         console.log("[Socket] Socket.io is not initialized.");
         return;
@@ -269,4 +301,4 @@ function sendMessageToCaptain(captainId, messageObject) {
     });
 }
 
-export { initializeSocket, sendMessageToSocketId, sendMessageToCaptain };
+export { initializeSocket, sendMessageToUser, sendMessageToCaptain };
