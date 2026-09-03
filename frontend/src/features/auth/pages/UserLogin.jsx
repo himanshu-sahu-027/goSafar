@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import logo from "../../../assets/goSafar.logo.png";
 
 import useUserAuth from "../hooks/useUserAuth";
+
+import "./UserLogin.css";
 
 function UserLogin() {
   const [email, setEmail] = useState("");
@@ -27,61 +30,183 @@ function UserLogin() {
   };
 
   return (
-    <div className="h-dvh w-full bg-gray-100 flex justify-center overflow-hidden">
-      {/* Mobile App Container */}
-      <div className="h-dvh w-full max-w-[430px] bg-white flex flex-col justify-between px-5 pt-5 pb-6">
-        <div>
-          <header className="-ml-2 pt-3 pb-6 flex items-center justify-between">
-            <img
-              src={logo}
-              alt="GoSafar"
-              className="h-9 w-auto object-contain"
-            />
+    <div className="user-login-page">
+      {/* Mobile app container */}
 
-            <span className="pr-4 ml-3 text-2xl font-bold text-black tracking-tight">
-              GoSafar
-            </span>
-          </header>
+      <div className="user-login-app">
+        {/* =====================================================
+            HEADER
+        ===================================================== */}
 
-          <form onSubmit={submitHandler}>
-            <h3 className="text-lg font-medium mb-2">What's your email</h3>
-            <input
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border-2 border-zinc-500 w-full text-lg placeholder:text-base focus:outline-none focus:border-cyan-500"
-              type="email"
-              placeholder="email@example.com"
-            />
+        <header className="user-login-header">
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="GoSafar" className="user-login-logo" />
+          </Link>
 
-            <h3 className="text-lg font-medium mb-2">Enter Password</h3>
-            <input
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border-2 border-zinc-500 w-full text-lg placeholder:text-base focus:outline-none focus:border-cyan-500"
-              type="password"
-              placeholder="password"
-            />
+          <div className="user-login-role">
+            <i className="ri-user-3-line" />
+            <span>Rider</span>
+          </div>
+        </header>
 
-            {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        {/* =====================================================
+            CONTENT
+        ===================================================== */}
+
+        <main className="user-login-main">
+          {/* ===================================================
+              INTRO
+          =================================================== */}
+
+          <section className="user-login-intro">
+            <div className="user-login-intro-icon">
+              <i className="ri-user-3-line" />
+            </div>
+
+            <p className="user-login-eyebrow">Welcome back, Rider</p>
+
+            <h1 className="user-login-title">Log in to GoSafar</h1>
+
+            <p className="user-login-description">
+              Log in to book rides, track your captain and enjoy a smooth
+              journey with GoSafar.
+            </p>
+          </section>
+
+          {/* ===================================================
+              LOGIN FORM
+          =================================================== */}
+
+          <form onSubmit={submitHandler} className="user-login-form">
+            {/* Email */}
+
+            <div className="user-login-field">
+              <div className="user-login-label-row">
+                <label htmlFor="user-email" className="user-login-label">
+                  Email address
+                </label>
+              </div>
+
+              <div className="user-login-input-wrapper">
+                <span className="user-login-input-icon">
+                  <i className="ri-mail-line" />
+                </span>
+
+                <input
+                  id="user-email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  className="user-login-input"
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+
+            <div className="user-login-field">
+              <div className="user-login-label-row">
+                <label htmlFor="user-password" className="user-login-label">
+                  Password
+                </label>
+
+                <span className="user-login-hint">Keep it secure</span>
+              </div>
+
+              <div className="user-login-input-wrapper">
+                <span className="user-login-input-icon">
+                  <i className="ri-lock-2-line" />
+                </span>
+
+                <input
+                  id="user-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                  className="user-login-input"
+                />
+              </div>
+            </div>
+
+            {/* Error */}
+
+            {error && (
+              <div className="user-login-error">
+                <div className="user-login-error-icon">
+                  <i className="ri-error-warning-line" />
+                </div>
+
+                <p className="user-login-error-message">{error}</p>
+              </div>
+            )}
+
+            {/* Login button */}
 
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg disabled:opacity-50"
+              className="user-login-submit"
             >
-              {isLoading ? "Logging in..." : "Login"}
+              <div className="user-login-submit-content">
+                <span className="user-login-submit-icon">
+                  <i
+                    className={
+                      isLoading
+                        ? "ri-loader-4-line animate-spin"
+                        : "ri-login-box-line"
+                    }
+                  />
+                </span>
+
+                <span className="user-login-submit-text pl-30">
+                  {isLoading ? "Logging in..." : "Login"}
+                </span>
+              </div>
+
+              {!isLoading && (
+                <span className="user-login-submit-arrow">
+                  <i className="ri-arrow-right-line" />
+                </span>
+              )}
             </button>
           </form>
 
-          <p className="text-center">
-            New here?{" "}
-            <Link to="/user-signup" className="text-cyan-600">
-              Create new Account
+          {/* ===================================================
+              SIGN UP
+          =================================================== */}
+
+          <section className="user-login-signup">
+            <div className="user-login-signup-divider">
+              <div className="user-login-signup-line" />
+
+              <span className="user-login-signup-label">New to GoSafar?</span>
+
+              <div className="user-login-signup-line" />
+            </div>
+
+            <Link to="/user-signup" className="user-login-signup-link">
+              <i className="ri-user-add-line" />
+
+              <span>Create a new account</span>
             </Link>
-          </p>
-        </div>
+          </section>
+
+          {/* ===================================================
+              SECURITY
+          =================================================== */}
+
+          <div className="user-login-security">
+            <i className="ri-shield-check-line" />
+
+            <p>Your account information is securely protected.</p>
+          </div>
+        </main>
       </div>
     </div>
   );

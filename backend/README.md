@@ -1,6 +1,6 @@
 # Backend API Documentation
 
-## `users/register` Endpoint
+## `/users/register` Endpoint
 
 ### Description
 
@@ -22,7 +22,7 @@ The request body should be in JSON format and include the following fields:
 
 ### Example Response
 
-- `message` (String): User created successfully.
+- `message` (String): `User created successfully`.
 - `user` (object):
   - `fullname` (object).
     - `firstname` (string): User's first name (minimum 3 characters).
@@ -50,7 +50,7 @@ The request body should be in JSON format and include the following fields:
 
 ### Example Response
 
-- `message` (String): User loggedin successfully.
+- `message` (String): `User logged in successfully`.
 - `user` (object):
   - `fullname` (object).
     - `firstname` (string): User's first name (minimum 3 characters).
@@ -71,7 +71,7 @@ Retrieves the profile information of the currently authenticated user.
 
 ### Authentication
 
-Requires a valid JWT token in the Authorization header - 
+Requires a valid JWT token in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Example Response
@@ -96,15 +96,8 @@ Logout the current user and blacklist the token provided in cookie or headers
 
 ### Authentication
 
-Requires a valid JWT token in the Authorization header or cookie:
-
-- `user` (object):
-  - `fullname` (object).
-    - `firstname` (string): User's first name (minimum 3 characters).
-    - `lastname` (string): User's last name (minimum 3 characters).   
-  - `email` (string): User's email address (must be a valid email).
-  - `password` (string): User's password (minimum 6 characters).
-- `token` (String): JWT Token
+Requires a valid JWT token in the Authorization header -
+`Authorization: Bearer <token>` or cookie:
 
 ### Example Response
 
@@ -258,8 +251,11 @@ Requires a valid JWT token in the Authorization header -
   - `destination` (string): Destination address.
   - `fare` (number): Ride fare.
   - `status` (string): Ride status such as `pending`, `accepted`, `ongoing`, `completed`, or `cancelled`.
-  - `paymentStatus` (string): Payment status such as `pending`, `paid`, or `failed`.
   - `captain` (object): Captain details if assigned.
+  - `payment` (object): Separate payment record if available.
+    - `status` (string): Payment status such as `pending`, `paid`, or `failed`.
+    - `razorpayPaymentId` (string): Razorpay payment ID, if available.
+    - `paidAt` (string): Payment completion time, if paid.
   - `updatedAt` (string): Last update time.
 
 ## `/captains/history` Endpoint
@@ -285,8 +281,11 @@ Requires a valid JWT token in the Authorization header -
   - `destination` (string): Destination address.
   - `fare` (number): Ride fare.
   - `status` (string): Ride status.
-  - `paymentStatus` (string): Payment status.
   - `user` (object): User information for the ride.
+  - `payment` (object): Separate payment record if available.
+    - `status` (string): Payment status such as `pending`, `paid`, or `failed`.
+    - `razorpayPaymentId` (string): Razorpay payment ID, if available.
+    - `paidAt` (string): Payment completion time, if paid.
   - `updatedAt` (string): Last update time.
 
 ## `/maps/getCoordinates` Endpoint
@@ -301,7 +300,7 @@ Fetches the latitude and longitude of a given address using the external geocodi
 
 ### Authentication
 
-This route is currently defined without an auth middleware in the backend route file.
+This route is defined without an auth middleware in the backend route file.
 
 ### Request Query Parameters
 
@@ -517,13 +516,28 @@ The request body should be in JSON format and include the following fields:
 - `ride` object with the updated ride fields.
   - `_id` (string): Ride ID.
   - `status` (string): Updated status, usually `completed`.
-  - `paymentStatus` (string): Payment status if already set.
 
-## `/rides/create-payment-order` Endpoint
+## Payment API
+
+Payment information is stored in a separate Payment record related to the ride. The Ride model stores the fare and ride status, but does not store payment status or Razorpay IDs.
+
+Payment flow:
+
+1. A ride is completed.
+2. The authenticated user creates a payment order.
+3. The backend creates a Razorpay order, or reuses an existing pending Razorpay order for the ride.
+4. The backend creates or updates the separate Payment record with `pending` status.
+5. Razorpay Checkout processes the payment.
+6. The frontend receives the Razorpay order and payment details.
+7. The frontend sends the Razorpay details to the verification endpoint.
+8. The backend verifies the order, payment signature, fetched Razorpay payment, and amount.
+9. The Payment record is updated to `paid` with the Razorpay payment ID and `paidAt` timestamp.
+
+## `/payments/createPaymentOrder` Endpoint
 
 ### Description
 
-Creates a Razorpay payment order for a completed ride and returns the public key and order details required to open the checkout.
+Creates or reuses a Razorpay payment order for a completed ride owned by the authenticated user.
 
 ### HTTP Method
 
@@ -531,31 +545,31 @@ Creates a Razorpay payment order for a completed ride and returns the public key
 
 ### Authentication
 
-Requires a valid JWT token for the authenticated user in the Authorization header - 
+Requires a valid JWT token in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Request Body
 
 The request body should be in JSON format and include the following fields:
 
-- `rideId` (string, required): ID of the completed ride that needs to be paid.
+- `rideId` (string, required): MongoDB ID of the completed ride to pay for.
 
 ### Example Response
 
 - `orderId` (string): Razorpay order ID.
 - `amount` (number): Amount in paise.
-- `currency` (string): Currency code, usually `INR`.
-- `key` (string): Razorpay key ID.
+- `currency` (string): `INR`.
+- `key` (string): Razorpay key ID for Checkout.
 
 ### Relevant Error Response
 
-- `400` with `message`: Ride not found / Ride is not completed yet / Ride already paid / Invalid ride id.
+- `400` with `message`: `Invalid ride id`, `Ride not found`, `Ride is not completed yet`, `Ride already paid`, or `Invalid ride fare`.
 
-## `/rides/verify-payment` Endpoint
+## `/payments/verifyPayment` Endpoint
 
 ### Description
 
-Verifies the Razorpay payment signature sent from the frontend and marks the ride as paid if valid.
+Verifies the Razorpay payment details for a completed ride and updates its separate Payment record to `paid` when verification succeeds.
 
 ### HTTP Method
 
@@ -563,30 +577,30 @@ Verifies the Razorpay payment signature sent from the frontend and marks the rid
 
 ### Authentication
 
-Requires a valid JWT token for the authenticated user in the Authorization header - 
+Requires a valid JWT token in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Request Body
 
 The request body should be in JSON format and include the following fields:
 
-- `rideId` (string, required): Ride ID.
-- `orderId` (string, required): Razorpay order ID.
-- `paymentId` (string, required): Razorpay payment ID.
-- `signature` (string, required): Razorpay signature returned in the payment response.
+- `rideId` (string, required): MongoDB ID of the completed ride.
+- `orderId` (string, required): Razorpay order ID returned by Checkout.
+- `paymentId` (string, required): Razorpay payment ID returned by Checkout.
+- `signature` (string, required): Razorpay signature returned by Checkout.
 
 ### Example Response
 
-- `message` (string): Payment verified successfully.
-- `payment` (object):
+- `message` (string): `Payment verified successfully`.
+- `payment` (object): Verified payment summary.
   - `rideId` (string): Ride ID.
   - `paymentStatus` (string): `paid`.
-  - `amount` (number): Ride fare.
-  - `paymentID` (string): Razorpay payment ID.
+  - `amount` (number): Payment amount in rupees.
+  - `paymentId` (string): Razorpay payment ID.
 
 ### Relevant Error Response
 
-- `400` with `message`: Payment details are incomplete / Invalid payment signature / Invalid payment response / Payment could not be completed.
+- `400` with `message`: `Payment details are incomplete`, `Ride not found`, `Ride is not completed`, `Payment record not found`, `Ride already paid`, `Invalid payment order`, `Invalid payment signature`, `Invalid payment response`, or `Payment amount mismatch`.
 
 ## `/` Endpoint
 
@@ -604,4 +618,4 @@ No authentication required.
 
 ### Example Response
 
-- `Hello world`
+- `Health check ok`

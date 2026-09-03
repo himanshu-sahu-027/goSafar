@@ -5,6 +5,8 @@ import logo from "../../../assets/goSafar.logo.png";
 
 import useCaptainAuth from "../hooks/useCaptainAuth";
 
+import "./CaptainSignup.css";
+
 function CaptainSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +48,6 @@ function CaptainSignup() {
       setPassword("");
       setFirstName("");
       setLastName("");
-
       setVehicleColor("");
       setVehiclePlate("");
       setVehicleCapacity("");
@@ -55,154 +56,335 @@ function CaptainSignup() {
   };
 
   return (
-    <div className="h-dvh w-full bg-gray-100 flex justify-center overflow-hidden">
-      {/* Mobile App Container */}
-      <div className="h-dvh w-full max-w-[430px] bg-white flex flex-col justify-between px-5 pt-3 pb-6">
-        <div>
-          {/* Header */}
-          <header className="-ml-2 pt-2 pb-6 flex items-center justify-between">
-            <img
-              src={logo}
-              alt="GoSafar"
-              className="h-8 w-auto object-contain"
-            />
+    <div className="captain-signup-page">
+      {/* Mobile app container */}
 
-            <span className="pr-4 ml-3 text-2xl font-bold text-black tracking-tight">
-              GoSafar
-            </span>
-          </header>
+      <div className="captain-signup-app">
+        {/* =====================================================
+            HEADER
+        ===================================================== */}
 
-          <form onSubmit={submitHandler}>
-            {/* Captain Name */}
-            <h3 className="text-lg font-medium mb-1">
-              What's our Captain's name
-            </h3>
+        <header className="captain-signup-header">
+          <Link to="/">
+            <img src={logo} alt="GoSafar" className="captain-signup-logo" />
+          </Link>
 
-            <div className="flex gap-3 mb-3">
-              <input
-                required
-                className="bg-[#eeeeee] w-1/2 rounded-lg px-3 py-1.5 border-2 border-zinc-500 text-base placeholder:text-base focus:outline-none focus:border-cyan-500"
-                type="text"
-                placeholder="First name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
+          <div className="captain-signup-role">
+            <i className="ri-steering-2-line" />
+            <span>Captain</span>
+          </div>
+        </header>
 
-              <input
-                required
-                className="bg-[#eeeeee] w-1/2 rounded-lg px-3 py-1.5 border-2 border-zinc-500 text-base placeholder:text-base focus:outline-none focus:border-cyan-500"
-                type="text"
-                placeholder="Last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
+        {/* =====================================================
+            SCROLLABLE CONTENT
+        ===================================================== */}
+
+        <main className="captain-signup-main">
+          {/* ===================================================
+              INTRO
+          =================================================== */}
+
+          <section className="captain-signup-intro">
+            <div className="captain-signup-intro-icon">
+              <i className="ri-user-add-line" />
             </div>
 
-            {/* Email */}
-            <h3 className="text-lg font-medium mb-1">
-              What's our Captain's email
-            </h3>
+            <p className="captain-signup-eyebrow">Join GoSafar</p>
 
-            <input
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-[#eeeeee] mb-3 rounded-lg px-3 py-1.5 border-2 border-zinc-500 w-full text-base placeholder:text-base focus:outline-none focus:border-cyan-500"
-              type="email"
-              placeholder="email@example.com"
-            />
+            <h1 className="captain-signup-title">Become a Captain</h1>
 
-            {/* Password */}
-            <h3 className="text-lg font-medium mb-1">Enter Password</h3>
+            <p className="captain-signup-description">
+              Create your captain account and start driving with GoSafar.
+            </p>
+          </section>
 
-            <input
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-[#eeeeee] mb-6 rounded-lg px-3 py-1.5 border-2 border-zinc-500 w-full text-base placeholder:text-base focus:outline-none focus:border-cyan-500"
-              type="password"
-              placeholder="password"
-            />
+          {/* ===================================================
+              FORM
+          =================================================== */}
 
-            {/* Vehicle Information */}
-            <h3 className="text-lg font-medium mb-1">Vehicle Information</h3>
+          <form onSubmit={submitHandler} className="captain-signup-form">
+            {/* =================================================
+                PERSONAL DETAILS
+            ================================================= */}
 
-            <div className="flex gap-3 mb-3">
-              <input
-                required
-                className="bg-[#eeeeee] w-1/2 rounded-lg px-3 py-1.5 border-2 border-zinc-500 text-base placeholder:text-base focus:outline-none focus:border-cyan-500"
-                type="text"
-                placeholder="Vehicle Color"
-                value={vehicleColor}
-                onChange={(e) => setVehicleColor(e.target.value)}
-              />
+            <div className="signup-section">
+              <div className="signup-section-header">
+                <div className="signup-section-icon">
+                  <i className="ri-user-3-line" />
+                </div>
 
-              <input
-                required
-                className="bg-[#eeeeee] w-1/2 rounded-lg px-3 py-1.5 border-2 border-zinc-500 text-base placeholder:text-base focus:outline-none focus:border-cyan-500"
-                type="text"
-                placeholder="Vehicle Plate"
-                value={vehiclePlate}
-                onChange={(e) => setVehiclePlate(e.target.value)}
-              />
+                <div>
+                  <h2 className="signup-section-title">Personal details</h2>
+
+                  <p className="signup-section-subtitle">
+                    Tell us about yourself
+                  </p>
+                </div>
+              </div>
+
+              {/* Name */}
+
+              <div className="signup-row">
+                <div className="signup-field">
+                  <label htmlFor="first-name" className="signup-label">
+                    First name
+                  </label>
+
+                  <input
+                    id="first-name"
+                    required
+                    type="text"
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="signup-input"
+                  />
+                </div>
+
+                <div className="signup-field">
+                  <label htmlFor="last-name" className="signup-label">
+                    Last name
+                  </label>
+
+                  <input
+                    id="last-name"
+                    required
+                    type="text"
+                    placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="signup-input"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+
+              <div className="signup-field signup-field-full">
+                <label htmlFor="captain-email" className="signup-label">
+                  Email address
+                </label>
+
+                <div className="signup-input-wrapper">
+                  <i className="ri-mail-line signup-input-icon" />
+
+                  <input
+                    id="captain-email"
+                    required
+                    type="email"
+                    autoComplete="email"
+                    placeholder="captain@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="signup-input with-icon"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+
+              <div className="signup-field signup-field-full">
+                <label htmlFor="captain-password" className="signup-label">
+                  Password
+                </label>
+
+                <div className="signup-input-wrapper">
+                  <i className="ri-lock-2-line signup-input-icon" />
+
+                  <input
+                    id="captain-password"
+                    required
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="Create a secure password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="signup-input with-icon"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="flex gap-3 mb-9">
-              <input
-                required
-                className="bg-[#eeeeee] w-1/2 rounded-lg px-3 py-1.5 border-2 border-zinc-500 text-base placeholder:text-base focus:outline-none focus:border-cyan-500"
-                type="number"
-                placeholder="Vehicle Capacity"
-                value={vehicleCapacity}
-                onChange={(e) => setVehicleCapacity(e.target.value)}
-              />
+            {/* =================================================
+                VEHICLE DETAILS
+            ================================================= */}
 
-              <select
-                required
-                className="bg-[#eeeeee] w-1/2 rounded-lg px-3 py-1.5 border-2 border-zinc-500 text-base focus:outline-none focus:border-cyan-500"
-                value={vehicleType}
-                onChange={(e) => setVehicleType(e.target.value)}
-              >
-                <option value="" disabled>
-                  Vehicle Type
-                </option>
+            <div className="signup-section">
+              <div className="signup-section-header">
+                <div className="signup-section-icon dark">
+                  <i className="ri-car-line" />
+                </div>
 
-                <option value="car">Car</option>
-                <option value="auto">Auto</option>
-                <option value="moto">Moto</option>
-              </select>
+                <div>
+                  <h2 className="signup-section-title">Vehicle details</h2>
+
+                  <p className="signup-section-subtitle">
+                    Add your vehicle information
+                  </p>
+                </div>
+              </div>
+
+              {/* Color + Plate */}
+
+              <div className="signup-row">
+                <div className="signup-field">
+                  <label htmlFor="vehicle-color" className="signup-label">
+                    Vehicle color
+                  </label>
+
+                  <input
+                    id="vehicle-color"
+                    required
+                    type="text"
+                    placeholder="e.g. White"
+                    value={vehicleColor}
+                    onChange={(e) => setVehicleColor(e.target.value)}
+                    className="signup-input"
+                  />
+                </div>
+
+                <div className="signup-field">
+                  <label htmlFor="vehicle-plate" className="signup-label">
+                    Number plate
+                  </label>
+
+                  <input
+                    id="vehicle-plate"
+                    required
+                    type="text"
+                    placeholder="e.g. OD02AB1234"
+                    value={vehiclePlate}
+                    onChange={(e) => setVehiclePlate(e.target.value)}
+                    className="signup-input plate"
+                  />
+                </div>
+              </div>
+
+              {/* Capacity + Type */}
+
+              <div className="signup-row signup-field-full">
+                <div className="signup-field">
+                  <label htmlFor="vehicle-capacity" className="signup-label">
+                    Capacity
+                  </label>
+
+                  <div className="signup-input-wrapper">
+                    <i className="ri-group-line signup-input-icon" />
+
+                    <input
+                      id="vehicle-capacity"
+                      required
+                      min="1"
+                      type="number"
+                      placeholder="Passengers"
+                      value={vehicleCapacity}
+                      onChange={(e) => setVehicleCapacity(e.target.value)}
+                      className="signup-input with-icon"
+                    />
+                  </div>
+                </div>
+
+                <div className="signup-field">
+                  <label htmlFor="vehicle-type" className="signup-label">
+                    Vehicle type
+                  </label>
+
+                  <div className="signup-input-wrapper">
+                    <i className="ri-car-line signup-input-icon" />
+
+                    <select
+                      id="vehicle-type"
+                      required
+                      value={vehicleType}
+                      onChange={(e) => setVehicleType(e.target.value)}
+                      className="signup-select with-icon"
+                    >
+                      <option value="" disabled>
+                        Select type
+                      </option>
+
+                      <option value="car">Car</option>
+
+                      <option value="auto">Auto</option>
+
+                      <option value="moto">Moto</option>
+                    </select>
+
+                    <i className="ri-arrow-down-s-line signup-select-arrow" />
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Error */}
-            {error && <p className="text-red-500 text-xs mb-3">{error}</p>}
+            {/* =================================================
+                ERROR
+            ================================================= */}
 
-            {/* Submit */}
+            {error && (
+              <div className="signup-error">
+                <div className="signup-error-icon">
+                  <i className="ri-error-warning-line" />
+                </div>
+
+                <p>{error}</p>
+              </div>
+            )}
+
+            {/* =================================================
+                SUBMIT
+            ================================================= */}
+
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-[#111] text-white font-semibold mb-2 rounded-lg px-4 py-2 w-full text-base disabled:opacity-50"
+              className="signup-submit"
             >
-              {isLoading ? "Creating account..." : "Create Captain Account"}
+              <div className="signup-submit-content">
+                <span className="signup-submit-icon">
+                  <i
+                    className={
+                      isLoading
+                        ? "ri-loader-4-line animate-spin"
+                        : "ri-user-add-line"
+                    }
+                  />
+                </span>
+
+                <span className="signup-submit-text">
+                  {isLoading ? "Creating account..." : "Create Captain Account"}
+                </span>
+              </div>
+
+              {!isLoading && (
+                <span className="signup-submit-arrow">
+                  <i className="ri-arrow-right-line" />
+                </span>
+              )}
             </button>
           </form>
 
-          {/* Login Link */}
-          <p className="text-center text-sm">
-            Already have an account?{" "}
-            <Link to="/captain-login" className="text-cyan-600">
+          {/* ===================================================
+              LOGIN
+          =================================================== */}
+
+          <div className="signup-login">
+            <p className="signup-login-text">Already have a captain account?</p>
+
+            <Link to="/captain-login" className="signup-login-link">
               Login here
             </Link>
-          </p>
-        </div>
+          </div>
 
-        {/* Footer */}
-        <div>
-          <p className="text-[9px] leading-tight">
-            This site is protected by reCAPTCHA and the{" "}
-            <span className="underline">GoSafar Privacy Policy</span> and{" "}
-            <span className="underline">Terms of Service apply</span>.
-          </p>
-        </div>
+          {/* ===================================================
+              SECURITY
+          =================================================== */}
+
+          <div className="signup-security">
+            <i className="ri-shield-check-line" />
+
+            <p>Your information is securely protected.</p>
+          </div>
+        </main>
       </div>
     </div>
   );

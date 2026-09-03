@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import logo from "../../../assets/goSafar.logo.png";
 
 import useUserAuth from "../hooks/useUserAuth";
 
+import "./UserSignup.css";
+
 function UserSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
@@ -20,6 +24,7 @@ function UserSignup() {
         firstname: firstName.trim(),
         lastname: lastName.trim(),
       },
+
       email: email.trim(),
       password,
     };
@@ -35,90 +40,229 @@ function UserSignup() {
   };
 
   return (
-    <div className="h-dvh w-full bg-gray-100 flex justify-center overflow-hidden">
-      {/* Mobile App Container */}
-      <div className="h-dvh w-full max-w-[430px] bg-white flex flex-col justify-between px-5 pt-5 pb-6">
-        <div>
-          <header className="-ml-2 pt-3 pb-6 flex items-center justify-between">
-            <img
-              src={logo}
-              alt="GoSafar"
-              className="h-9 w-auto object-contain"
-            />
+    <div className="user-signup-page">
+      {/* Mobile app container */}
 
-            <span className="pr-4 ml-3 text-2xl font-bold text-black tracking-tight">
-              GoSafar
-            </span>
-          </header>
+      <div className="user-signup-app">
+        {/* =====================================================
+            HEADER
+        ===================================================== */}
 
-          <form onSubmit={submitHandler}>
-            <h3 className="text-lg font-medium mb-2">What's your name</h3>
+        <header className="user-signup-header">
+          <Link to="/">
+            <img src={logo} alt="GoSafar" className="user-signup-logo" />
+          </Link>
 
-            <div className="flex gap-4 mb-7">
-              <input
-                required
-                className="bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border-2 border-zinc-500 text-lg placeholder:text-base focus:outline-none focus:border-cyan-500"
-                type="text"
-                placeholder="First name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-              <input
-                required
-                className="bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border-2 border-zinc-500 text-lg placeholder:text-base focus:outline-none focus:border-cyan-500"
-                type="text"
-                placeholder="Last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
+          <div className="user-signup-role">
+            <i className="ri-user-3-line" />
+            <span>Rider</span>
+          </div>
+        </header>
+
+        {/* =====================================================
+            SCROLLABLE CONTENT
+        ===================================================== */}
+
+        <main className="user-signup-main">
+          {/* ===================================================
+              INTRO
+          =================================================== */}
+
+          <section className="user-signup-intro">
+            <div className="user-signup-intro-icon">
+              <i className="ri-user-add-line" />
             </div>
 
-            <h3 className="text-lg font-medium mb-2">What's your email</h3>
-            <input
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border-2 border-zinc-500 w-full text-lg placeholder:text-base focus:outline-none focus:border-cyan-500"
-              type="email"
-              placeholder="email@example.com"
-            />
+            <p className="user-signup-eyebrow">Join GoSafar</p>
 
-            <h3 className="text-lg font-medium mb-2">Enter Password</h3>
-            <input
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border-2 border-zinc-500 w-full text-lg placeholder:text-base focus:outline-none focus:border-cyan-500"
-              type="password"
-              placeholder="password"
-            />
+            <h1 className="user-signup-title">Create your Rider account</h1>
 
-            {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+            <p className="user-signup-description">
+              Create your account and start booking comfortable rides with
+              GoSafar.
+            </p>
+          </section>
+
+          {/* ===================================================
+              FORM
+          =================================================== */}
+
+          <form onSubmit={submitHandler} className="user-signup-form">
+            {/* =================================================
+                PERSONAL DETAILS
+            ================================================= */}
+
+            <div className="user-signup-section">
+              <div className="user-signup-section-header">
+                <div className="user-signup-section-icon">
+                  <i className="ri-user-3-line" />
+                </div>
+
+                <div>
+                  <h2 className="user-signup-section-title">
+                    Personal details
+                  </h2>
+
+                  <p className="user-signup-section-subtitle">
+                    Tell us about yourself
+                  </p>
+                </div>
+              </div>
+
+              {/* Name */}
+
+              <div className="user-signup-row">
+                <div className="user-signup-field">
+                  <label htmlFor="first-name" className="user-signup-label">
+                    First name
+                  </label>
+
+                  <input
+                    id="first-name"
+                    required
+                    type="text"
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="user-signup-input"
+                  />
+                </div>
+
+                <div className="user-signup-field">
+                  <label htmlFor="last-name" className="user-signup-label">
+                    Last name
+                  </label>
+
+                  <input
+                    id="last-name"
+                    required
+                    type="text"
+                    placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="user-signup-input"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+
+              <div className="user-signup-field user-signup-field-full">
+                <label htmlFor="user-email" className="user-signup-label">
+                  Email address
+                </label>
+
+                <div className="user-signup-input-wrapper">
+                  <i className="ri-mail-line user-signup-input-icon" />
+
+                  <input
+                    id="user-email"
+                    required
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="user-signup-input with-icon"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+
+              <div className="user-signup-field user-signup-field-full">
+                <label htmlFor="user-password" className="user-signup-label">
+                  Password
+                </label>
+
+                <div className="user-signup-input-wrapper">
+                  <i className="ri-lock-2-line user-signup-input-icon" />
+
+                  <input
+                    id="user-password"
+                    required
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="Create a secure password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="user-signup-input with-icon"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* =================================================
+                ERROR
+            ================================================= */}
+
+            {error && (
+              <div className="user-signup-error">
+                <div className="user-signup-error-icon">
+                  <i className="ri-error-warning-line" />
+                </div>
+
+                <p>{error}</p>
+              </div>
+            )}
+
+            {/* =================================================
+                SUBMIT
+            ================================================= */}
 
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg disabled:opacity-50"
+              className="user-signup-submit"
             >
-              {isLoading ? "Creating account..." : "Create account"}
+              <div className="user-signup-submit-content">
+                <span className="user-signup-submit-icon">
+                  <i
+                    className={
+                      isLoading
+                        ? "ri-loader-4-line animate-spin"
+                        : "ri-user-add-line"
+                    }
+                  />
+                </span>
+
+                <span className="user-signup-submit-text">
+                  {isLoading ? "Creating account..." : "Create account"}
+                </span>
+              </div>
+
+              {!isLoading && (
+                <span className="user-signup-submit-arrow">
+                  <i className="ri-arrow-right-line" />
+                </span>
+              )}
             </button>
           </form>
 
-          <p className="text-center">
-            Already have an account?{" "}
-            <Link to="/user-login" className="text-cyan-600">
+          {/* ===================================================
+              LOGIN
+          =================================================== */}
+
+          <div className="user-signup-login">
+            <p className="user-signup-login-text">
+              Already have a GoSafar account?
+            </p>
+
+            <Link to="/user-login" className="user-signup-login-link">
               Login here
             </Link>
-          </p>
-        </div>
+          </div>
 
-        <div>
-          <p className="text-[10px] leading-tight">
-            This site is protected by reCAPTCHA and the{" "}
-            <span className="underline">Google Privacy Policy</span> and{" "}
-            <span className="underline">Terms of Service apply</span>.
-          </p>
-        </div>
+          {/* ===================================================
+              SECURITY
+          =================================================== */}
+
+          <div className="user-signup-security">
+            <i className="ri-shield-check-line" />
+
+            <p>Your information is securely protected.</p>
+          </div>
+        </main>
       </div>
     </div>
   );

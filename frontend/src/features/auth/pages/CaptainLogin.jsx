@@ -5,6 +5,8 @@ import logo from "../../../assets/goSafar.logo.png";
 
 import useCaptainAuth from "../hooks/useCaptainAuth";
 
+import "./CaptainLogin.css";
+
 function CaptainLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,64 +30,185 @@ function CaptainLogin() {
   };
 
   return (
-    <div className="h-dvh w-full bg-gray-100 flex justify-center overflow-hidden">
-      {/* Mobile App Container */}
-      <div className="h-dvh w-full max-w-[430px] bg-white flex flex-col justify-between px-5 pt-5 pb-6">
-        <div>
-          <header className="-ml-2 pt-3 pb-6 flex items-center justify-between">
-            <img
-              src={logo}
-              alt="GoSafar"
-              className="h-9 w-auto object-contain"
-            />
+    <div className="captain-login-page">
+      {/* Mobile app container */}
 
-            <span className="pr-4 ml-3 text-2xl font-bold text-black tracking-tight">
-              GoSafar
-            </span>
-          </header>
+      <div className="captain-login-app">
+        {/* =====================================================
+            HEADER
+        ===================================================== */}
 
-          <form onSubmit={submitHandler}>
-            <h3 className="text-lg font-medium mb-2">What's your email</h3>
+        <header className="captain-login-header">
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="GoSafar" className="captain-login-logo" />
+          </Link>
 
-            <input
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border-2 border-zinc-500 w-full text-lg placeholder:text-base focus:outline-none focus:border-cyan-500"
-              type="email"
-              placeholder="email@example.com"
-            />
+          <div className="captain-login-role">
+            <i className="ri-steering-2-line" />
+            <span>Captain</span>
+          </div>
+        </header>
 
-            <h3 className="text-lg font-medium mb-2">Enter Password</h3>
+        {/* =====================================================
+            CONTENT
+        ===================================================== */}
 
-            <input
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border-2 border-zinc-500 w-full text-lg placeholder:text-base focus:outline-none focus:border-cyan-500"
-              type="password"
-              placeholder="password"
-            />
+        <main className="captain-login-main">
+          {/* ===================================================
+              INTRO
+          =================================================== */}
 
-            {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+          <section className="captain-login-intro">
+            <div className="captain-login-intro-icon">
+              <i className="ri-steering-2-line" />
+            </div>
+
+            <p className="captain-login-eyebrow ">Welcome back, Captain</p>
+
+            <h1 className="captain-login-title">Log in to GoSafar</h1>
+
+            <p className="captain-login-description">
+              Log in to manage your rides, accept passengers and start earning.
+            </p>
+          </section>
+
+          {/* ===================================================
+              LOGIN FORM
+          =================================================== */}
+
+          <form onSubmit={submitHandler} className="captain-login-form">
+            {/* Email */}
+
+            <div className="captain-login-field">
+              <div className="captain-login-label-row">
+                <label htmlFor="captain-email" className="captain-login-label">
+                  Email address
+                </label>
+              </div>
+
+              <div className="captain-login-input-wrapper">
+                <span className="captain-login-input-icon">
+                  <i className="ri-mail-line" />
+                </span>
+
+                <input
+                  id="captain-email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  autoComplete="email"
+                  placeholder="captain@example.com"
+                  className="captain-login-input"
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+
+            <div className="captain-login-field">
+              <div className="captain-login-label-row">
+                <label
+                  htmlFor="captain-password"
+                  className="captain-login-label"
+                >
+                  Password
+                </label>
+
+                <span className="captain-login-hint">Keep it secure</span>
+              </div>
+
+              <div className="captain-login-input-wrapper">
+                <span className="captain-login-input-icon">
+                  <i className="ri-lock-2-line" />
+                </span>
+
+                <input
+                  id="captain-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                  className="captain-login-input"
+                />
+              </div>
+            </div>
+
+            {/* Error */}
+
+            {error && (
+              <div className="captain-login-error">
+                <div className="captain-login-error-icon">
+                  <i className="ri-error-warning-line" />
+                </div>
+
+                <p className="captain-login-error-message">{error}</p>
+              </div>
+            )}
+
+            {/* Login button */}
 
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg disabled:opacity-50"
+              className="captain-login-submit"
             >
-              {isLoading ? "Logging in..." : "Login"}
+              <div className="captain-login-submit-content">
+                <span className="captain-login-submit-icon">
+                  <i
+                    className={
+                      isLoading
+                        ? "ri-loader-4-line animate-spin"
+                        : "ri-login-box-line"
+                    }
+                  />
+                </span>
+
+                <span className="captain-login-submit-text pl-30">
+                  {isLoading ? "Logging in..." : "Login"}
+                </span>
+              </div>
+
+              {!isLoading && (
+                <span className="captain-login-submit-arrow">
+                  <i className="ri-arrow-right-line" />
+                </span>
+              )}
             </button>
           </form>
 
-          <p className="text-center">
-            Join a fleet?{" "}
-            <Link to="/captain-signup" className="text-cyan-600">
-              Register as a Captain
-            </Link>
-          </p>
-        </div>
+          {/* ===================================================
+              REGISTER
+          =================================================== */}
 
+          <section className="captain-login-register">
+            <div className="captain-login-register-divider">
+              <div className="captain-login-register-line" />
+
+              <span className="captain-login-register-label">New Captain?</span>
+
+              <div className="captain-login-register-line" />
+            </div>
+
+            <Link to="/captain-signup" className="captain-login-register-link">
+              <i className="ri-user-add-line" />
+
+              <span>Register as a Captain</span>
+            </Link>
+          </section>
+
+          {/* ===================================================
+              SECURITY
+          =================================================== */}
+
+          <div className="captain-login-security">
+            <i className="ri-shield-check-line" />
+
+            <p>Your account information is securely protected.</p>
+          </div>
+        </main>
       </div>
     </div>
   );
