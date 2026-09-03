@@ -1,6 +1,10 @@
 # Backend API Documentation
 
-## `/users/register` Endpoint
+# 🟢 User APIs
+
+These endpoints handle user authentication, including traditional registration, login, Google Sign-In, profile management, logout, and ride history.
+
+## 🟢 `/users/register`      End Point
 
 ### Description
 
@@ -26,12 +30,11 @@ The request body should be in JSON format and include the following fields:
 - `user` (object):
   - `fullname` (object).
     - `firstname` (string): User's first name (minimum 3 characters).
-    - `lastname` (string): User's last name (minimum 3 characters).   
+    - `lastname` (string): User's last name (minimum 3 characters).
   - `email` (string): User's email address (must be a valid email).
-  - `password` (string): User's password (minimum 6 characters).
 - `token` (String): JWT Token
 
-## `/users/login` Endpoint
+## 🟢 `/users/login`      End Point
 
 ### Description
 
@@ -54,12 +57,46 @@ The request body should be in JSON format and include the following fields:
 - `user` (object):
   - `fullname` (object).
     - `firstname` (string): User's first name (minimum 3 characters).
-    - `lastname` (string): User's last name (minimum 3 characters).   
+    - `lastname` (string): User's last name (minimum 3 characters).
   - `email` (string): User's email address (must be a valid email).
-  - `password` (string): User's password (minimum 6 characters).
 - `token` (String): JWT Token
 
-## `/users/profile` Endpoint
+## 🟢 `/users/google`      End Point
+
+### Description
+
+Signs in an existing user or creates a new user using a verified Google ID token. If the Google email already belongs to a GoSafar user, the verified Google account is linked to that user.
+
+### HTTP Method
+
+`POST`
+
+### Authentication
+
+No authentication required. The Google ID token is verified by the backend before the user is authenticated.
+
+### Request Body
+
+The request body should be in JSON format and include the following fields:
+
+- `idToken` (string, required): Google ID token received from the frontend.
+
+### Example Response
+
+- `message` (String): `User signed in successfully`.
+- `user` (object): Existing or newly created GoSafar user.
+  - `googleId` (string): Verified Google account ID.
+  - `fullname` (object).
+    - `firstname` (string): User's first name from the verified Google account.
+    - `lastname` (string): User's last name from the verified Google account.
+  - `email` (string): User's verified Google email address.
+- `token` (String): JWT Token
+
+### Relevant Error Response
+
+- `401` with `message`: `Google ID token is required` or `Invalid Google authentication`.
+
+## 🟢 `/users/profile`      End Point
 
 ### Description
 
@@ -79,12 +116,10 @@ Requires a valid JWT token in the Authorization header -
 - `user` (object):
   - `fullname` (object).
     - `firstname` (string): User's first name (minimum 3 characters).
-    - `lastname` (string): User's last name (minimum 3 characters).   
+    - `lastname` (string): User's last name (minimum 3 characters).
   - `email` (string): User's email address (must be a valid email).
 
-
-
-## `/users/logout` Endpoint
+## 🟢 `/users/logout`      End Point
 
 ### Description
 
@@ -104,7 +139,47 @@ Requires a valid JWT token in the Authorization header -
 - `message` (String) : User logged out successfully.
 
 
-## `/captains/register` Endpoint
+
+
+## 🟢 `/users/history`      End Point
+
+### Description
+
+Retrieves the ride history of the currently authenticated user.
+
+### HTTP Method
+
+`GET`
+
+### Authentication
+
+Requires a valid JWT token in the Authorization header -
+`Authorization: Bearer <token>` or cookie:
+
+### Example Response
+
+- `rides` (array): List of ride records belonging to the authenticated user.
+  - `_id` (string): Ride ID.
+  - `pickup` (string): Pickup address.
+  - `destination` (string): Destination address.
+  - `fare` (number): Ride fare.
+  - `status` (string): Ride status such as `pending`, `accepted`, `ongoing`, `completed`, or `cancelled`.
+  - `captain` (object): Captain details if assigned.
+  - `payment` (object): Separate payment record if available.
+    - `status` (string): Payment status such as `pending`, `paid`, or `failed`.
+    - `razorpayPaymentId` (string): Razorpay payment ID, if available.
+    - `paidAt` (string): Payment completion time, if paid.
+  - `updatedAt` (string): Last update time.
+
+
+
+---
+
+# 🔴 Captain APIs
+
+These endpoints handle captain authentication, including traditional registration, login, Google Sign-In, vehicle registration completion, profile management, logout, and ride history.
+
+## 🔴 `/captains/register`      End Point
 
 ### Description
 
@@ -135,9 +210,8 @@ The request body should be in JSON format and include the following fields:
 - `captain` (object):
   - `fullname` (object).
     - `firstname` (string): Captain's first name (minimum 3 characters).
-    - `lastname` (string): Captain's last name (minimum 3 characters).   
+    - `lastname` (string): Captain's last name (minimum 3 characters).
   - `email` (string): Captain's email address (must be a valid email).
-  - `password` (string): Captain's password (minimum 6 characters).
   - `vehicle` (object):
     - `color` (string): Vehicle color.
     - `plate` (string): Vehicle plate number.
@@ -145,7 +219,7 @@ The request body should be in JSON format and include the following fields:
     - `vehicleType` (string): Type of vehicle.
 - `token` (String): JWT Token
 
-## `/captains/login` Endpoint
+## 🔴 `/captains/login`      End Point
 
 ### Description
 
@@ -172,9 +246,8 @@ The request body should be in JSON format and include the following fields:
 - `captain` (object):
   - `fullname` (object).
     - `firstname` (string): Captain's first name (minimum 3 characters).
-    - `lastname` (string): Captain's last name (minimum 3 characters).   
+    - `lastname` (string): Captain's last name (minimum 3 characters).
   - `email` (string): Captain's email address (must be a valid email).
-  - `password` (string): Captain's password (minimum 6 characters).
   - `vehicle` (object):
     - `color` (string): Vehicle color.
     - `plate` (string): Vehicle plate number.
@@ -182,7 +255,99 @@ The request body should be in JSON format and include the following fields:
     - `vehicleType` (string): Type of vehicle.
 - `token` (String): JWT Token
 
-## `/captains/profile` Endpoint
+## 🔴 `/captains/google`      End Point
+
+### Description
+
+Signs in an existing captain using a verified Google ID token or starts registration for a new captain. If the Google email already belongs to a GoSafar captain, the verified Google account is linked to that captain.
+
+### HTTP Method
+
+`POST`
+
+### Authentication
+
+No authentication required. The Google ID token is verified by the backend before an existing captain is authenticated or registration is started.
+
+### Request Body
+
+The request body should be in JSON format and include the following fields:
+
+- `idToken` (string, required): Google ID token received from the frontend.
+
+### Example Response
+
+For an existing captain:
+
+- `message` (String): `Captain logged in successfully`.
+- `captain` (object): Authenticated captain.
+  - `googleId` (string): Verified Google account ID.
+  - `fullname` (object).
+    - `firstname` (string): Captain's first name.
+    - `lastname` (string): Captain's last name.
+  - `email` (string): Captain's verified Google email address.
+  - `vehicle` (object): Captain's vehicle details.
+    - `color` (string): Vehicle color.
+    - `plate` (string): Vehicle plate number.
+    - `capacity` (number): Vehicle passenger capacity.
+    - `vehicleType` (string): Type of vehicle: `car`, `moto`, or `auto`.
+- `token` (String): JWT Token
+
+For a new captain who must complete vehicle registration:
+
+- `message` (String): `Complete captain registration`.
+- `registrationRequired` (boolean): Indicates that vehicle registration is required.
+- `registrationToken` (String): Short-lived token containing the verified Google identity information.
+
+### Relevant Error Response
+
+- `401` with `message`: `Google ID token is required` or `Invalid Google authentication`.
+
+## 🔴 `/captains/google/completeRegistration`      End Point
+
+### Description
+
+Completes registration for a new captain after Google authentication by adding the required vehicle information. The Google identity information is taken from the signed registration token rather than from frontend-supplied identity fields.
+
+### HTTP Method
+
+`POST`
+
+### Authentication
+
+No authentication required. This endpoint accepts the short-lived registration token because the captain does not have a normal GoSafar JWT yet.
+
+### Request Body
+
+The request body should be in JSON format and include the following fields:
+
+- `registrationToken` (string, required): Short-lived Google captain registration token returned by `/captains/google`.
+- `vehicle` (object, required): Captain's vehicle information.
+  - `color` (string, required): Vehicle color (minimum 3 characters).
+  - `plate` (string, required): Vehicle plate number (minimum 3 characters).
+  - `capacity` (number, required): Vehicle passenger capacity (minimum 1).
+  - `vehicleType` (string, required): Type of vehicle (must be `car`, `moto`, or `auto`).
+
+### Example Response
+
+- `message` (String): `Captain registered successfully`.
+- `captain` (object): Newly created captain.
+  - `googleId` (string): Verified Google account ID from the registration token.
+  - `fullname` (object).
+    - `firstname` (string): Captain's first name from the registration token.
+    - `lastname` (string): Captain's last name from the registration token.
+  - `email` (string): Captain's email address from the registration token.
+  - `vehicle` (object): Captain's vehicle details.
+    - `color` (string): Vehicle color.
+    - `plate` (string): Vehicle plate number.
+    - `capacity` (number): Vehicle passenger capacity.
+    - `vehicleType` (string): Type of vehicle: `car`, `moto`, or `auto`.
+- `token` (String): JWT Token
+
+### Relevant Error Response
+
+- `400` with `message`: `Registration token is required`, `All vehicle fields are required`, `Invalid or expired registration token`, `Invalid captain registration token`, or `Captain already exists`.
+## 🔴 `/captains/profile`      End Point
 
 ### Description
 
@@ -194,15 +359,15 @@ Retrieves the profile information of the currently authenticated captain.
 
 ### Authentication
 
-Requires a valid JWT token in the Authorization header - 
-`Authorization: Bearer <token>`  or cookie:
+Requires a valid JWT token in the Authorization header -
+`Authorization: Bearer <token>` or cookie:
 
 ### Example Response
 
 - `captain` (object):
   - `fullname` (object).
     - `firstname` (string): Captain's first name (minimum 3 characters).
-    - `lastname` (string): Captain's last name (minimum 3 characters).   
+    - `lastname` (string): Captain's last name (minimum 3 characters).
   - `email` (string): Captain's email address (must be a valid email).
   - `vehicle` (object):
     - `color` (string): Vehicle color.
@@ -210,7 +375,7 @@ Requires a valid JWT token in the Authorization header -
     - `capacity` (number): Vehicle passenger capacity.
     - `vehicleType` (string): Type of vehicle.
 
-## `/captains/logout` Endpoint
+## 🔴 `/captains/logout`      End Point
 
 ### Description
 
@@ -228,37 +393,7 @@ Requires a valid JWT token in the Authorization header or cookie:
 
 - `message` (string): Captain logged out successfully.
 
-## `/users/history` Endpoint
-
-### Description
-
-Retrieves the ride history of the currently authenticated user.
-
-### HTTP Method
-
-`GET`
-
-### Authentication
-
-Requires a valid JWT token in the Authorization header - 
-`Authorization: Bearer <token>` or cookie:
-
-### Example Response
-
-- `rides` (array): List of ride records belonging to the authenticated user.
-  - `_id` (string): Ride ID.
-  - `pickup` (string): Pickup address.
-  - `destination` (string): Destination address.
-  - `fare` (number): Ride fare.
-  - `status` (string): Ride status such as `pending`, `accepted`, `ongoing`, `completed`, or `cancelled`.
-  - `captain` (object): Captain details if assigned.
-  - `payment` (object): Separate payment record if available.
-    - `status` (string): Payment status such as `pending`, `paid`, or `failed`.
-    - `razorpayPaymentId` (string): Razorpay payment ID, if available.
-    - `paidAt` (string): Payment completion time, if paid.
-  - `updatedAt` (string): Last update time.
-
-## `/captains/history` Endpoint
+## 🔴 `/captains/history`      End Point
 
 ### Description
 
@@ -270,7 +405,7 @@ Retrieves the completed ride history of the currently authenticated captain.
 
 ### Authentication
 
-Requires a valid JWT token in the Authorization header - 
+Requires a valid JWT token in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Example Response
@@ -288,7 +423,13 @@ Requires a valid JWT token in the Authorization header -
     - `paidAt` (string): Payment completion time, if paid.
   - `updatedAt` (string): Last update time.
 
-## `/maps/getCoordinates` Endpoint
+---
+
+# 🔵 Map APIs
+
+These endpoints provide address geocoding, autocomplete suggestions, and route distance and duration data used during ride booking.
+
+## 🔵 `/maps/getCoordinates`      End Point
 
 ### Description
 
@@ -313,7 +454,7 @@ This route is defined without an auth middleware in the backend route file.
   - `latitude` (number): Latitude value.
   - `longitude` (number): Longitude value.
 
-## `/maps/getDistanceTime` Endpoint
+## 🔵 `/maps/getDistanceTime`      End Point
 
 ### Description
 
@@ -325,7 +466,7 @@ Calculates the driving distance and estimated duration between an origin and des
 
 ### Authentication
 
-Requires a valid JWT token in the Authorization header - 
+Requires a valid JWT token in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Request Query Parameters
@@ -340,7 +481,7 @@ Requires a valid JWT token in the Authorization header -
   - `distance` (number): Distance in kilometers.
   - `duration` (number): Estimated time in minutes.
 
-## `/maps/getSuggestions` Endpoint
+## 🔵 `/maps/getSuggestions`      End Point
 
 ### Description
 
@@ -352,7 +493,7 @@ Returns location search suggestions for a text input value.
 
 ### Authentication
 
-Requires a valid JWT token in the Authorization header - 
+Requires a valid JWT token in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Request Query Parameters
@@ -368,7 +509,13 @@ Requires a valid JWT token in the Authorization header -
     - `longitude` (number): Longitude value.
     - `latitude` (number): Latitude value.
 
-## `/rides/createRide` Endpoint
+---
+
+# 🟣 Ride APIs
+
+These endpoints manage the ride lifecycle from fare estimation and ride creation through captain acceptance, OTP-based ride start, and ride completion.
+
+## 🟣 `/rides/createRide`      End Point
 
 ### Description
 
@@ -380,7 +527,7 @@ Creates a new ride request for the authenticated user.
 
 ### Authentication
 
-Requires a valid JWT token in the Authorization header - 
+Requires a valid JWT token in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Request Body
@@ -400,7 +547,7 @@ The request body should be in JSON format and include the following fields:
 - `status` (string): Ride status, initially `pending`.
 - `otp` (string): One-time password generated for the ride.
 
-## `/rides/getFare` Endpoint
+## 🟣 `/rides/getFare`      End Point
 
 ### Description
 
@@ -412,7 +559,7 @@ Calculates the estimated ride fare between the pickup and destination addresses.
 
 ### Authentication
 
-Requires a valid JWT token in the Authorization header - 
+Requires a valid JWT token in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Request Query Parameters
@@ -429,7 +576,7 @@ Requires a valid JWT token in the Authorization header -
 - `distance` (number): Route distance in kilometers.
 - `duration` (number): Route duration in minutes.
 
-## `/rides/confirmRide` Endpoint
+## 🟣 `/rides/confirmRide`      End Point
 
 ### Description
 
@@ -441,7 +588,7 @@ Lets a captain accept a ride request.
 
 ### Authentication
 
-Requires a valid JWT token for a captain in the Authorization header - 
+Requires a valid JWT token for a captain in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Request Body
@@ -461,7 +608,7 @@ The request body should be in JSON format and include the following fields:
   - `destination` (string): Destination address.
   - `fare` (number): Ride fare.
 
-## `/rides/startRide` Endpoint
+## 🟣 `/rides/startRide`      End Point
 
 ### Description
 
@@ -473,7 +620,7 @@ Starts a ride after OTP verification by the captain.
 
 ### Authentication
 
-Requires a valid JWT token for a captain in the Authorization header - 
+Requires a valid JWT token for a captain in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Request Body
@@ -490,7 +637,7 @@ The request body should be in JSON format and include the following fields:
   - `status` (string): Updated status, usually `ongoing`.
   - `otp` (string): OTP is kept in the server response for the user-facing ride payload.
 
-## `/rides/endRide` Endpoint
+## 🟣 `/rides/endRide`      End Point
 
 ### Description
 
@@ -502,7 +649,7 @@ Marks a currently ongoing ride as completed.
 
 ### Authentication
 
-Requires a valid JWT token for a captain in the Authorization header - 
+Requires a valid JWT token for a captain in the Authorization header -
 `Authorization: Bearer <token>` or cookie:
 
 ### Request Body
@@ -517,23 +664,13 @@ The request body should be in JSON format and include the following fields:
   - `_id` (string): Ride ID.
   - `status` (string): Updated status, usually `completed`.
 
-## Payment API
+---
 
-Payment information is stored in a separate Payment record related to the ride. The Ride model stores the fare and ride status, but does not store payment status or Razorpay IDs.
+# 🟠 Payment APIs
 
-Payment flow:
+These endpoints handle Razorpay order creation and backend payment verification for completed rides. Payment records are maintained separately from the Ride model.
 
-1. A ride is completed.
-2. The authenticated user creates a payment order.
-3. The backend creates a Razorpay order, or reuses an existing pending Razorpay order for the ride.
-4. The backend creates or updates the separate Payment record with `pending` status.
-5. Razorpay Checkout processes the payment.
-6. The frontend receives the Razorpay order and payment details.
-7. The frontend sends the Razorpay details to the verification endpoint.
-8. The backend verifies the order, payment signature, fetched Razorpay payment, and amount.
-9. The Payment record is updated to `paid` with the Razorpay payment ID and `paidAt` timestamp.
-
-## `/payments/createPaymentOrder` Endpoint
+## 🟠 `/payments/createPaymentOrder`      End Point
 
 ### Description
 
@@ -565,7 +702,7 @@ The request body should be in JSON format and include the following fields:
 
 - `400` with `message`: `Invalid ride id`, `Ride not found`, `Ride is not completed yet`, `Ride already paid`, or `Invalid ride fare`.
 
-## `/payments/verifyPayment` Endpoint
+## 🟠 `/payments/verifyPayment`      End Point
 
 ### Description
 
@@ -602,7 +739,13 @@ The request body should be in JSON format and include the following fields:
 
 - `400` with `message`: `Payment details are incomplete`, `Ride not found`, `Ride is not completed`, `Payment record not found`, `Ride already paid`, `Invalid payment order`, `Invalid payment signature`, `Invalid payment response`, or `Payment amount mismatch`.
 
-## `/` Endpoint
+---
+
+# ⚪ System / Health API
+
+Provides a basic backend health/status endpoint.
+
+## ⚪ `/`      End Point
 
 ### Description
 
@@ -619,3 +762,17 @@ No authentication required.
 ### Example Response
 
 - `Health check ok`
+
+
+
+
+
+
+
+
+
+
+
+
+
+

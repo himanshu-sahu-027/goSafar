@@ -23,6 +23,7 @@
   max-width: 430px;
   height: 100dvh;
 
+
   overflow: hidden;
 
   background: #e7ebf0;
@@ -94,7 +95,7 @@
   padding: 0 20px;
 
   scrollbar-width: thin;
-  scrollbar-color: #94a3b8 transparent;
+  scrollbar-color: #e7ebf0 transparent;
 }
 
 .captain-login-main::-webkit-scrollbar {
@@ -117,7 +118,7 @@
 .captain-login-intro {
   flex-shrink: 0;
 
-  padding-top: 24px;
+  padding-top: 16px;
 }
 
 .captain-login-intro-icon {

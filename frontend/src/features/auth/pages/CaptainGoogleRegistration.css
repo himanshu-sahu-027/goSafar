@@ -1,0 +1,469 @@
+/* =========================================================
+   PAGE
+========================================================= */
+
+.captain-google-page {
+  min-height: 100dvh;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  background: #111827;
+}
+
+.captain-google-app {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+
+  background: #ffffff;
+
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   STICKY HEADER
+========================================================= */
+
+.captain-google-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px 18px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-bottom: 1px solid #f1f5f9;
+
+  backdrop-filter: blur(12px);
+}
+
+.captain-google-logo-link {
+  display: flex;
+  align-items: center;
+  margin-left: -10px;
+}
+
+.captain-google-logo {
+  width: 104px;
+  height: auto;
+
+  object-fit: contain;
+}
+
+/* Captain badge */
+
+.captain-google-role {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 8px 13px;
+
+  border: 1px solid #e0f2fe;
+  border-radius: 999px;
+
+  background: #f0f9ff;
+
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 650;
+
+  box-shadow: 0 2px 7px rgba(14, 165, 233, 0.06);
+}
+
+.captain-google-role i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 23px;
+  height: 23px;
+
+  border-radius: 50%;
+
+  background: #111827;
+
+  color: #06b6d4;
+
+  font-size: 14px;
+}
+
+/* Close button */
+
+.captain-google-close {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f1f5f9;
+
+  color: #475569;
+
+  font-size: 19px;
+
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.captain-google-close:active {
+  transform: scale(0.92);
+}
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+.captain-google-timeline {
+  display: flex;
+  align-items: flex-start;
+
+  padding: 21px 30px 7px;
+
+  background: #ffffff;
+}
+
+/* Step */
+
+.timeline-step {
+  min-width: 46px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 7px;
+
+  position: relative;
+}
+
+.timeline-icon {
+  position: relative;
+
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  color: #94a3b8;
+
+  font-size: 15px;
+
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.35s ease;
+}
+
+.timeline-step p {
+  margin: 0;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  color: #94a3b8;
+
+  transition: color 0.35s ease;
+}
+
+/* =========================================================
+   GOOGLE - COMPLETED
+========================================================= */
+
+.timeline-step.completed .timeline-icon {
+  background: #06b6d4;
+
+  border-color: #06b6d4;
+
+  color: #ffffff;
+
+  box-shadow: 0 0 0 5px #ecfeff;
+}
+
+.timeline-step.completed p {
+  color: #0891b2;
+}
+
+/* Google check badge */
+
+.timeline-check {
+  position: absolute;
+
+  right: -4px;
+  bottom: -3px;
+
+  width: 14px;
+  height: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #10b981;
+
+  border: 2px solid #ffffff;
+
+  color: #ffffff;
+
+  font-size: 8px;
+}
+
+/* =========================================================
+   VEHICLE - CURRENT
+========================================================= */
+
+.timeline-step.current .timeline-icon {
+  background: #111827;
+
+  border-color: #111827;
+
+  color: #ffffff;
+
+  box-shadow: 0 0 0 5px #f1f5f9;
+
+  transform: scale(1.04);
+}
+
+.timeline-step.current p {
+  color: #111827;
+}
+
+/* =========================================================
+   VEHICLE - COMPLETED
+========================================================= */
+
+.timeline-step.completed .timeline-icon {
+  background: #06b6d4;
+
+  border-color: #06b6d4;
+
+  color: #ffffff;
+
+  box-shadow: 0 0 0 5px #ecfeff;
+}
+
+/* =========================================================
+   READY - NOT COMPLETED
+========================================================= */
+
+.timeline-step.upcoming .timeline-icon {
+  background: #f8fafc;
+
+  border-color: #e2e8f0;
+
+  color: #94a3b8;
+
+  box-shadow: none;
+}
+
+.timeline-step.upcoming p {
+  color: #94a3b8;
+}
+
+/* =========================================================
+   READY - COMPLETED
+========================================================= */
+
+.timeline-step.ready .timeline-icon {
+  background: #ecfeff;
+
+  border-color: #ecfeff;
+
+  color: #0891b2;
+
+  box-shadow: 0 0 0 5px #f0fdff;
+}
+
+.timeline-step.ready p {
+  color: #0891b2;
+}
+
+/* =========================================================
+   TIMELINE CONNECTION
+========================================================= */
+
+.timeline-line {
+  flex: 1;
+
+  height: 2px;
+
+  margin: 16px 5px 0;
+
+  background: #e5e7eb;
+
+  transition:
+    background 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/*
+ * Google → Vehicle is ALWAYS completed.
+ */
+
+.timeline-line.completed:first-of-type {
+  background: #67e8f9;
+
+  box-shadow: 0 0 5px rgba(6, 182, 212, 0.12);
+}
+
+/*
+ * Vehicle → Ready becomes completed
+ * only after all vehicle fields are filled.
+ */
+
+.timeline-line.completed {
+  background: #67e8f9;
+
+  box-shadow: 0 0 5px rgba(6, 182, 212, 0.12);
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.captain-google-main {
+  padding: 18px 20px 28px;
+}
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.captain-google-intro {
+  margin-top: 5px;
+}
+
+.captain-google-eyebrow {
+  margin: 0 0 6px;
+
+  color: #0891b2;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.captain-google-title {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 26px;
+  line-height: 1.15;
+
+  letter-spacing: -0.6px;
+  font-weight: 650;
+}
+
+.captain-google-description {
+  max-width: 370px;
+
+  margin: 9px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+  line-height: 19px;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.captain-google-form {
+  margin-top: 24px;
+}
+
+/* =========================================================
+   SECURITY
+========================================================= */
+
+.captain-google-security {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 19px;
+  padding-top: 15px;
+
+  border-top: 1px solid #f1f5f9;
+
+  color: #94a3b8;
+}
+
+.captain-google-security i {
+  color: #10b981;
+
+  font-size: 14px;
+}
+
+.captain-google-security p {
+  margin: 0;
+
+  font-size: 9px;
+  line-height: 14px;
+}
+
+/* =========================================================
+   SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+  .captain-google-header {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .captain-google-main {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .captain-google-timeline {
+    padding-left: 23px;
+    padding-right: 23px;
+  }
+
+  .captain-google-title {
+    font-size: 25px;
+  }
+
+  .captain-google-role {
+    display: none;
+  }
+}

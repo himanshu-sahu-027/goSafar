@@ -7,7 +7,10 @@ import { CaptainAuthContext } from "../contexts/captainAuth.context";
 import {
   registerCaptain,
   loginCaptain,
+  signinCaptainWithGoogle,
+  completeGoogleCaptainRegistration,
   getCaptainProfile,
+  logoutCaptain,
 } from "../services/captainAuth.api";
 
 const useCaptainAuth = () => {
@@ -85,6 +88,91 @@ const useCaptainAuth = () => {
     [navigate, setCaptain, setAuthChecked],
   );
 
+  const signinWithGoogle = useCallback(
+    async (idToken) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const data = await signinCaptainWithGoogle(idToken);
+
+        // Existing captain account.
+        if (!data.registrationRequired) {
+          localStorage.setItem("captainToken", data.token);
+
+          setCaptain(data.captain);
+          setAuthChecked(true);
+
+          navigate("/captain-home");
+
+          return {
+            success: true,
+            registrationRequired: false,
+          };
+        }
+
+        // New captain needs vehicle registration.
+        return {
+          success: true,
+          registrationRequired: true,
+          registrationToken: data.registrationToken,
+        };
+      } catch (error) {
+        console.error("Captain Google sign-in failed:", error);
+
+        const message =
+          error.response?.data?.message ||
+          "Unable to sign in with Google. Please try again.";
+
+        setError(message);
+
+        return {
+          success: false,
+          registrationRequired: false,
+        };
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [navigate, setCaptain, setAuthChecked],
+  );
+
+  const completeGoogleRegistration = useCallback(
+    async (registrationToken, vehicle) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const data = await completeGoogleCaptainRegistration(
+          registrationToken,
+          vehicle,
+        );
+
+        localStorage.setItem("captainToken", data.token);
+
+        setCaptain(data.captain);
+        setAuthChecked(true);
+
+        navigate("/captain-home");
+
+        return true;
+      } catch (error) {
+        console.error("Captain Google registration failed:", error);
+
+        const message =
+          error.response?.data?.message ||
+          "Unable to complete registration. Please try again.";
+
+        setError(message);
+
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [navigate, setCaptain, setAuthChecked],
+  );
+
   const fetchCaptainProfile = useCallback(async () => {
     const token = localStorage.getItem("captainToken");
 
@@ -99,9 +187,9 @@ const useCaptainAuth = () => {
     setError(null);
 
     try {
-      const data = await getCaptainProfile(token);
+      const captain = await getCaptainProfile(token);
 
-      setCaptain(data.captain ?? null);
+      setCaptain(captain ?? null);
 
       return true;
     } catch (error) {
@@ -129,11 +217,11 @@ const useCaptainAuth = () => {
     setError(null);
 
     try {
-      /*
-       * We will connect the backend logout
-       * endpoint here once we add it to
-       * captainAuth.api.js.
-       */
+      const token = localStorage.getItem("captainToken");
+
+      if (token) {
+        await logoutCaptain(token);
+      }
 
       return true;
     } catch (error) {
@@ -164,6 +252,8 @@ const useCaptainAuth = () => {
 
     signup,
     login,
+    signinWithGoogle,
+    completeGoogleRegistration,
     fetchCaptainProfile,
     logout,
   };

@@ -17,6 +17,7 @@
   flex-direction: column;
   width: 100%;
   max-width: 430px;
+  padding-left:7px;
   height: 100dvh;
   overflow: hidden;
   background: #e7ebf0;
@@ -35,6 +36,8 @@
 
   height: 60px;
   padding: 0 16px;
+
+  margin-left: -9px;
 
   background: #ffffff;
   border-bottom: 1px solid #f1f5f9;

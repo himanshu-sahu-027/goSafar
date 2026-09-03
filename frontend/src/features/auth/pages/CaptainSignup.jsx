@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import logo from "../../../assets/goSafar.logo.png";
+import GoogleSigninButton from "../components/GoogleSigninButton";
 
 import useCaptainAuth from "../hooks/useCaptainAuth";
 
@@ -19,7 +20,9 @@ function CaptainSignup() {
   const [vehicleCapacity, setVehicleCapacity] = useState("");
   const [vehicleType, setVehicleType] = useState("");
 
-  const { signup, isLoading, error } = useCaptainAuth();
+  const navigate = useNavigate();
+
+  const { signup, signinWithGoogle, isLoading, error } = useCaptainAuth();
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -52,6 +55,18 @@ function CaptainSignup() {
       setVehiclePlate("");
       setVehicleCapacity("");
       setVehicleType("");
+    }
+  };
+
+  const handleGoogleSignin = async (idToken) => {
+    const result = await signinWithGoogle(idToken);
+
+    if (result?.registrationRequired) {
+      navigate("/captain-google-registration", {
+        state: {
+          registrationToken: result.registrationToken,
+        },
+      });
     }
   };
 
@@ -362,6 +377,25 @@ function CaptainSignup() {
               )}
             </button>
           </form>
+
+          {/* ===================================================
+              OR
+          =================================================== */}
+          <div className="my-3 flex items-center gap-3">
+            <div className="h-px flex-1 bg-gray-200" />
+            <span className="text-xs font-medium text-gray-400">OR</span>
+            <div className="h-px flex-1 bg-gray-200" />
+          </div>
+
+          {/* ===================================================
+              GOOGLE SIGNIN
+          =================================================== */}
+          <div className="mb-3">
+            <GoogleSigninButton
+              onSuccess={handleGoogleSignin}
+              disabled={isLoading}
+            />
+          </div>
 
           {/* ===================================================
               LOGIN

@@ -1,6 +1,7 @@
 import {
   createUserService,
   loginUserService,
+  googleUserSigninService,
 } from "../services/user.service.js";
 import { getUserRideHistoryService } from "../services/ride.service.js";
 
@@ -30,7 +31,6 @@ async function registerUserController(req, res, next) {
       user: createdUser,
       token,
     });
-
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -60,9 +60,39 @@ async function loginUserController(req, res, next) {
       user,
       token,
     });
-    
   } catch (error) {
     res.status(401).json({ message: error.message });
+  }
+}
+
+/**
+ * @name googleUserSigninController
+ * @description Signs in an existing user or creates a new user using Google authentication.
+ * @route POST /users/google
+ * @access Public
+ */
+async function googleUserSigninController(req, res) {
+  try {
+    const { idToken } = req.body;
+
+    // Delegate Google authentication to the service.
+    const user = await googleUserSigninService(idToken);
+
+    // Generate the normal GoSafar JWT.
+    const token = user.generateAuthToken();
+
+    // Set authentication cookie.
+    res.cookie("token", token);
+
+    return res.status(200).json({
+      message: "User signed in successfully",
+      user,
+      token,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
   }
 }
 
@@ -108,7 +138,6 @@ async function logoutUserController(req, res) {
     res.clearCookie("token");
 
     res.status(200).json({ message: "User logged out successfully" });
-
   } catch (error) {
     res.status(500).json({ message: "Logout failed", error: error.message });
   }
@@ -117,6 +146,7 @@ async function logoutUserController(req, res) {
 export {
   registerUserController,
   loginUserController,
+  googleUserSigninController,
   getUserProfileController,
   getUserRideHistoryController,
   logoutUserController,

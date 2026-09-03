@@ -6,6 +6,7 @@ import { UserAuthContext } from "../contexts/userAuth.context";
 import {
   registerUser,
   loginUser,
+  signinUserWithGoogle,
   getUserProfile,
   logoutUser,
 } from "../services/userAuth.api";
@@ -85,6 +86,38 @@ const useUserAuth = () => {
     [navigate, setUser, setAuthChecked],
   );
 
+  const signinWithGoogle = useCallback(
+    async (idToken) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Send the Google ID token to the backend for verification.
+        const data = await signinUserWithGoogle(idToken);
+
+        localStorage.setItem("userToken", data.token);
+
+        setUser(data.user);
+        setAuthChecked(true);
+
+        navigate("/user-home");
+
+        return true;
+      } catch (error) {
+        console.error("User Google sign-in failed:", error);
+
+        const message = error.response?.data?.message || "Unable to sign in with Google. Please try again.";
+
+        setError(message);
+
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [navigate, setUser, setAuthChecked],
+  );
+
   const fetchUserProfile = useCallback(async () => {
     const token = localStorage.getItem("userToken");
 
@@ -99,9 +132,10 @@ const useUserAuth = () => {
     setError(null);
 
     try {
-      const data = await getUserProfile(token);
+      const user = await getUserProfile(token);
+      console.log("fetched user profile inside  hooks :", user);
 
-      setUser(data.user ?? null);
+      setUser(user ?? null);
 
       return true;
     } catch (error) {
@@ -161,6 +195,7 @@ const useUserAuth = () => {
     error,
     signup,
     login,
+    signinWithGoogle,
     fetchUserProfile,
     logout,
   };

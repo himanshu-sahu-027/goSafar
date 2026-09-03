@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import logo from "../../../assets/goSafar.logo.png";
+import GoogleSigninButton from "../components/GoogleSigninButton";
 
 import useUserAuth from "../hooks/useUserAuth";
 
@@ -14,7 +15,7 @@ function UserSignup() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  const { signup, isLoading, error } = useUserAuth();
+  const { signup, signinWithGoogle, isLoading, error } = useUserAuth();
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -238,6 +239,26 @@ function UserSignup() {
               )}
             </button>
           </form>
+
+          {/* ==================================================
+              OR
+              =============================================== */}
+          <div className="mb-5 flex items-center gap-3">
+            <div className="h-px flex-1 bg-gray-200" />
+            <span className="text-xs font-medium text-gray-400">OR</span>
+            <div className="h-px flex-1 bg-gray-200" />
+          </div>
+
+          {/* ===================================================
+              SIGN IN WITH GOOGLE
+          =================================================== */}
+          <div className="mb-3">
+            <GoogleSigninButton
+              disabled={isLoading}
+              onSuccess={signinWithGoogle}
+            />
+          </div>
+
 
           {/* ===================================================
               LOGIN

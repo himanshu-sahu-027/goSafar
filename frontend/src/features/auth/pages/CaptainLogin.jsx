@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import logo from "../../../assets/goSafar.logo.png";
+import GoogleSigninButton from "../components/GoogleSigninButton";
 
 import useCaptainAuth from "../hooks/useCaptainAuth";
 
@@ -11,7 +12,9 @@ function CaptainLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, isLoading, error } = useCaptainAuth();
+  const navigate = useNavigate();
+
+  const { login, signinWithGoogle, isLoading, error } = useCaptainAuth();
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -26,6 +29,18 @@ function CaptainLogin() {
     if (success) {
       setEmail("");
       setPassword("");
+    }
+  };
+
+  const handleGoogleSignin = async (idToken) => {
+    const result = await signinWithGoogle(idToken);
+
+    if (result?.registrationRequired) {
+      navigate("/captain-google-registration", {
+        state: {
+          registrationToken: result.registrationToken,
+        },
+      });
     }
   };
 
@@ -178,6 +193,25 @@ function CaptainLogin() {
               )}
             </button>
           </form>
+
+          {/* ===================================================
+              OR
+          =================================================== */}
+          <div className="my-3 flex items-center gap-3">
+            <div className="h-px flex-1 bg-gray-200" />
+            <span className="text-xs font-medium text-gray-400">OR</span>
+            <div className="h-px flex-1 bg-gray-200" />
+          </div>
+
+          {/* ===================================================
+              GOOGLE SIGNIN
+          =================================================== */}
+          <div>
+            <GoogleSigninButton
+              onSuccess={handleGoogleSignin}
+              disabled={isLoading}
+            />
+          </div>
 
           {/* ===================================================
               REGISTER

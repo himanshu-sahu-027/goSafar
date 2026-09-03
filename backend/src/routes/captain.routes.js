@@ -1,20 +1,20 @@
 import express from "express";
 
 import {
-    registerCaptainController,
-    loginCaptainController,
-    getCaptainProfileController,
-    getCaptainRideHistoryController,
-    logoutCaptainController
+  registerCaptainController,
+  loginCaptainController,
+  googleCaptainSigninController,
+  completeGoogleCaptainRegistrationController,
+  getCaptainProfileController,
+  getCaptainRideHistoryController,
+  logoutCaptainController,
 } from "../controllers/captain.controller.js";
 
-import {
-    authCaptain
-} from "../middlewares/auth.middleware.js";
+import { authCaptain } from "../middlewares/auth.middleware.js";
 
 import {
-    registerCaptainValidation,
-    loginCaptainValidation,
+  registerCaptainValidation,
+  loginCaptainValidation,
 } from "../validators/captain.validators.js";
 
 import validateRequest from "../middlewares/validationError.middleware.js";
@@ -26,14 +26,38 @@ const captainRouter = express.Router();
  * @description Register a new captain
  * @access public
  */
-captainRouter.post("/register", registerCaptainValidation, validateRequest, registerCaptainController);
+captainRouter.post(
+  "/register",
+  registerCaptainValidation,
+  validateRequest,
+  registerCaptainController,
+);
 
 /**
  * @route POST /captains/login
  * @description Login a captain
  * @access public
  */
-captainRouter.post("/login", loginCaptainValidation, validateRequest, loginCaptainController);
+captainRouter.post(
+  "/login",
+  loginCaptainValidation,
+  validateRequest,
+  loginCaptainController,
+);
+
+/**
+ * @route POST /captains/google
+ * @description Sign in with Google or start captain registration
+ * @access public
+ */
+captainRouter.post("/google", googleCaptainSigninController);
+
+/**
+ * @route POST /captains/google/complete-registration
+ * @description Complete Google captain registration with vehicle information
+ * @access public
+ */
+captainRouter.post("/google/completeRegistration", completeGoogleCaptainRegistrationController);
 
 /**
  * @route GET /captains/profile
@@ -48,7 +72,7 @@ captainRouter.get("/profile", authCaptain, getCaptainProfileController);
  * @access private
  */
 captainRouter.get("/history", authCaptain, getCaptainRideHistoryController);
- 
+
 /**
  * @route POST /captains/logout
  * @description Logout a captain by blacklisting its token and clearing the cookie

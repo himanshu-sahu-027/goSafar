@@ -10,6 +10,14 @@ const loginUser = async (credentials) => {
     return response.data;
 };
 
+const signinUserWithGoogle = async (idToken) => {
+    const response = await axios.post("/users/google", {
+        idToken,
+    });
+
+    return response.data;
+};
+
 const getUserProfile = async (token) => {
     const response = await axios.get("/users/profile", {
         headers: {
@@ -37,6 +45,7 @@ const logoutUser = async (token) => {
 export {
     registerUser,
     loginUser,
+    signinUserWithGoogle,
     getUserProfile,
     logoutUser,
 };
